@@ -1,0 +1,148 @@
+
+Khalil Gatto
+11/11/2023
+
+Go Fish Final Project Notes
+
+## How to play MODIFIED Go Fish
+
+GOAL: To draw a set of a specific card (4 cards of the same number)
+
+*The round begins by dealing 6 random cards to each player. 
+*A deck has 36 cards. If all cards are drawn from the deck, then the player with the most sets wins.
+
+*To ask a card from a player, the asker must have a card of the same rank (number).
+	If victim has the card asked, they must give all cards of the number being asked.
+		Then, the asker gets to go again.
+
+*If they don't have the card that is asked, then the victim says "go fish" and the asker has to draw a card from the pile.
+	If asker draws the rank that they asked for from the pile, they get to go again.
+
+*If a player runs out of cards, then they will draw 6 new cards from the deck.
+	If there are less than 6 cards left in the deck, they can just take the rest.
+
+
+## PROGRAM REQUIREMENTS
+
+1) The user must be the first one to begin the game.
+	*Player asks pc for card of a particular rank or face value.
+	* 
+2) To simulate the deck of 36 cards, and each of the hands, your MUST use a dynamic list of cards
+   with the following struct type: ...NOTE. WE CAN ADD TO THE STRUCT. JUST CANT REMOVE WHAT ALREADY EXISTS
+   ---------------------------------------------
+			typedef struct card_s {
+				char suit;
+				int face; 
+				struct card_s *next;
+			}card;
+	---------------------------------------------
+3) Each card has clubs, spades, hearts, or diamonds
+		- 1 Ace and 2-9
+4) 36 card deck must be implemented via linked list. Each hand as well.
+5) We must shuffle the deck using an algorithm. Here is an example that we can use:
+	---------------------------------------------
+	for j = 1 to 37
+		generate one random number between 1 and 37.
+		if the random number is not j
+			swap content of these two nodes
+	---------------------------------------------
+	After shuffle, one card is given to the player, then the pc. Do this until each player has 6 cards.
+
+6) Must implement the use of ShuffleCard() function. MUST WORK WIHT ANY SIZE DECK OF CARDS!
+	NOTE. See sec 2.24 in zybook and reference time() and srand()
+
+See the notes section of the final project rubric pdf for more information on code.
+
+	
+
+## PSEUDOCODE and WORKFLOW
+
+	typedef struct card_s {
+		char suit;
+		int face; 
+		struct card_s *next;
+	}card;
+
+	typedef struct player_s {
+		suit
+		face
+
+	} player;
+
+	main() 
+	{
+		- ask user to enter name
+		- print "(name) lets play go fish"
+
+		- generate card deck
+			for (i = 0; i < 9; i++) //becuz there are 9 sets.
+				STORED IN A LINKED LIST and STRUCT
+				*A(hearts) A(diamond) A(spade) A(club)
+				*2(hearts) 2(diamond) 2(spade) 2(club)
+				...... 
+				*9(hearts) 9(diamond) 9(spade) 9(club)
+
+		-ShuffleCards()	
+			-for j = 1 to size(deck)
+				generate one random number between 1 and 37.
+				-if the random number is not j
+					swap content of these two nodes
+
+		- distribute cards
+			- for i = 1 to size(deck)
+				-generate random number
+				-assign card attributes from random num node to player attributes
+				-assign card attributes from random num node to player2(pc) attributes
+
+		- print players hand.
+		- implement press {key} to continue
+
+		- print players hand.
+		- implement AskCard()
+			- print "Which card (A,2-9) do you want to ask for? :"
+			- while user input is not the option asked, ask again
+				-break if it is a valid option
+			-return input to main()
+
+		while flag != 1 {
+			//implement function that keeps track of whos turn it is ie. PlayRound(user, user_info)
+			-------------------------------------------------------------------------
+			|	//whos turn it is will be kept track by a number. example:			|
+			|																		|
+			|	player1 = 1															|
+			|	player2 = 2															|
+			|	if (num == 1)														|	
+			|		PlayRound(num,user_info[1])										|
+			|	else																|
+			|		PlayRound(num, user_info[2])									|
+			|-----------------------------------------------------------------------|
+			
+			for loop
+				if askcard == any card in other players deck
+					- copy nodes 
+					- add them to the other players deck via dynamic list. add n nodes for n cards found.
+					- delete node from victim
+					-found_card_count++
+
+					if (found_card_count == 0 and we are at the end of loop)
+						- go fish
+						- add a random card to askers deck from the deck
+						- flag = 1
+						- reset card count
+					else 
+						continue
+		- AskCard() 
+		}
+
+		flag = 0
+		
+		- implement press {key} to continue
+		
+
+
+
+
+		
+
+
+	}
