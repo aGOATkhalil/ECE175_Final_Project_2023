@@ -15,6 +15,7 @@
 #include <string.h>
 #include <math.h>
 
+void Shuffle_Card(); // Shuffle cards.
 
 typedef struct card_s			//can add or change to this but not delete any preexisting
 {
@@ -23,7 +24,7 @@ typedef struct card_s			//can add or change to this but not delete any preexisti
     struct card_s* next;
 } card;
 
-Shuffle_Card()			
+void Shuffle_Card()
 {				
    //"should work with any size deck of cards"
    //"[see sec 2.24 Random numbers in your zyBooks]"
