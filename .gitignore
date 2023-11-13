@@ -366,3 +366,6 @@ FodyWeavers.xsd
 ./**/**.vcxproj 
 ./**/**.sln
 **.xcodeproj/
+**.sln
+**.vcxproj
+**.vcxproj.filters
