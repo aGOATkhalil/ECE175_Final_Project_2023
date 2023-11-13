@@ -1,0 +1,20 @@
+
+Khalil Gatto  
+11/13/2023
+
+
+Many changes were made to this repo today with the help of Manny.
+The problem was that working on the source code on another OS created a problem where I could not open the code and push anything to the repo.
+Instead, the error was "Cannot open file [path]" and that was that. 
+
+Solving the issue required adding .sln, .filters, and another file to .gitignore. Essentially we are telling the repo to ignore any changes to these file types
+in order to focus on the source code.
+
+To push changes made in Xcode, run the following commands in your terminal in the appropriate directory:
+
+  % git add 
+  % git commit -m "changed main.c"
+  % git push
+
+
+I will see the behavior from Windows when I get home.
