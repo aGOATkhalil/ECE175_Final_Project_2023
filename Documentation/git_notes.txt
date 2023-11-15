@@ -18,3 +18,9 @@ To push changes made in Xcode, run the following commands in your terminal in th
 
 
 I will see the behavior from Windows when I get home.
+
+UPDATE - 11/14/2023
+
+CMake allows Windows users to compile their code without relying on dependencies and makes it where
+Mac users can compile code just fine. Its a good way to test code in the same repo.
+

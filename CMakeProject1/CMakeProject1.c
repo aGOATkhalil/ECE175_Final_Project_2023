@@ -1,10 +1,6 @@
-﻿// CMakeProject1.cpp : Defines the entry point for the application.
-//
-
+﻿
 #include "CMakeProject1.h"
 
-int main(void)
-{
     //Rayce Bacchus & Khalil Gatto
     //11-4-2023
 
@@ -29,7 +25,7 @@ int main(void)
         struct card_s* next;
     } card;
 
-    void Shuffle_Card(); {
+    void Shuffle_Card() {
 
         printf("hi");
         //"should work with any size deck of cards"
@@ -37,7 +33,7 @@ int main(void)
         //"You should seed the random number generator with a call to time() with srand()"
     }
 
-    int main(void); {
+    int main(void) {
 
         //blah blah stuff blah blah
         //balls
@@ -48,9 +44,6 @@ int main(void)
         scanf("%s", player_name);
         printf("\n%s lets play go fish!\n", player_name);
 
-
-
         return 0;
     }
 
-}
