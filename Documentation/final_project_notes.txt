@@ -66,8 +66,14 @@ See the notes section of the final project rubric pdf for more information on co
 	typedef struct player_s {
 		suit
 		face
-
 	} player;
+ 
+    /* HOW TO KEEP OF PLAYER TURN
+    
+        Considerations:
+            - If its the players turn, we must be able to have access to their information so that we can add or remove stuff from them.
+    
+    */
 
 	main() 
 	{
@@ -87,6 +93,8 @@ See the notes section of the final project rubric pdf for more information on co
 				generate one random number between 1 and 37.
 				-if the random number is not j
 					swap content of these two nodes
+            //can store in an array
+            
 
 		- distribute cards
 			- for i = 1 to size(deck)
@@ -106,6 +114,7 @@ See the notes section of the final project rubric pdf for more information on co
 
 		while flag != 1 {
 			//implement function that keeps track of whos turn it is ie. PlayRound(user, user_info)
+            //see top of page
 			-------------------------------------------------------------------------
 			|	//whos turn it is will be kept track by a number. example:			|
 			|																		|
