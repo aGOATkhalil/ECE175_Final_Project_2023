@@ -110,7 +110,6 @@ int main(void) {
 
     
     char player_name[100]; //may change later. names may not always be just 100 char long.
-    int size_of_deck = 36;
     printf("Enter your name: ");
     scanf("%s", player_name);
     printf("\n%s lets play go fish!\n", player_name);
