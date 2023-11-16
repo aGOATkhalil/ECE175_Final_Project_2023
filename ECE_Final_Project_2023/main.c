@@ -2,13 +2,14 @@
 //11-4-2023
 
 /*
-***************************************************************************************************************
-                    USE LINKED LISTS OR ELSE GET 0
-***************************************************************************************************************
-*/
+ 
+ See final_project_notes.txt in the repo for the pseudocode.
+ 
+ */
 
 
-#define CRT_SECURE_NO_WARNINGS
+
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,9 +37,7 @@ void Shuffle_Card()
 
 int main(void) {
 
-    //blah blah stuff blah blah
-    //balls
-
+    
     char player_name[100]; //may change later. names may not always be just 100 char long.
 
     printf("Enter your name: ");
