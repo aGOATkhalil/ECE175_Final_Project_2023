@@ -44,6 +44,8 @@
         scanf("%s", player_name);
         printf("\n%s lets play go fish!\n", player_name);
 
+        printf("stuff");
+
         return 0;
     }
 
