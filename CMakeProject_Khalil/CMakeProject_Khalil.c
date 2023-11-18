@@ -51,20 +51,24 @@ void CardNode_InsertAfter(card* thisCard, card* newCard) {
 void CardNode_PrintNodeData(card* thisCard) {
     
     if (thisCard->suit == 's') {
-        thisCard->suit = SPADE;
-        printf("%d %c\n", thisCard->face, thisCard->suit);
+        printf("%d ", thisCard->face);
+        printf(SPADE);
+        printf("\n");
     }
     else if (thisCard->suit == 'h') {
-        thisCard->suit = CLUB; 
-        printf("%d %c\n", thisCard->face, thisCard->suit);
+        printf("%d ", thisCard->face);
+        printf(HEART);
+        printf("\n");
     }
     else if (thisCard->suit== 'c') {
-        thisCard->suit = HEART;
-        printf("%d %c\n", thisCard->face, thisCard->suit);
+        printf("%d ", thisCard->face);
+        printf(CLUB);
+        printf("\n");
     }
     else if (thisCard -> suit == 'd') {
-        thisCard->suit= DIAMOND;
-        printf("%d %c\n", thisCard->face, thisCard->suit);
+        printf("%d ", thisCard->face);
+        printf(DIAMOND);
+        printf("\n");
     }
     else {
         printf("\n");
@@ -116,7 +120,7 @@ int main(void) {
     card* deck_head = NULL;
     card* lastObj = NULL;
 
-    testUnicode(); //the output of these symbols work on windows and mac!
+    //testUnicode(); //the output of these symbols work on windows and mac!
 
     deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
