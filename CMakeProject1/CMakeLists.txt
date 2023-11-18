@@ -9,3 +9,15 @@ project ("CMakeProject1")
 add_executable (CMakeProject1 "CMakeProject1.c" "CMakeProject1.h")
 
 # TODO: Add tests and install targets if needed.
+
+#if defined(_WIN32) || defined(__MSDOS__) //for unicode definitions. need to test on windows.
+#define SPADE   "\x06"
+#define CLUB    "\x05"
+#define HEART   "\x03"
+#define DIAMOND "\x04"
+#else
+#define SPADE   "\xE2\x99\xA0"
+#define CLUB    "\xE2\x99\xA3"
+#define HEART   "\xE2\x99\xA5"
+#define DIAMOND "\xE2\x99\xA6"
+#endif

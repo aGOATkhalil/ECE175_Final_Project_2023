@@ -33,7 +33,6 @@ typedef struct card_s {			//can add or change to this but not delete any preexis
 
 } card;
 
-
 void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->suit = suit;
     thisCard->face = face;
@@ -50,16 +49,33 @@ void CardNode_InsertAfter(card* thisCard, card* newCard) {
 }
 
 void CardNode_PrintNodeData(card* thisCard) {
-    printf("%d\n", thisCard->suit);
+    
+    if (thisCard->suit == 's') {
+        thisCard->suit = SPADE;
+        printf("%d %c\n", thisCard->face, thisCard->suit);
+    }
+    else if (thisCard->suit == 'h') {
+        thisCard->suit = CLUB; 
+        printf("%d %c\n", thisCard->face, thisCard->suit);
+    }
+    else if (thisCard->suit== 'c') {
+        thisCard->suit = HEART;
+        printf("%d %c\n", thisCard->face, thisCard->suit);
+    }
+    else if (thisCard -> suit == 'd') {
+        thisCard->suit= DIAMOND;
+        printf("%d %c\n", thisCard->face, thisCard->suit);
+    }
+    else {
+        printf("\n");
+    }
+    
 }
 
 // Grab location pointed by nextNodePtr
 card* IntNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
-
-
-
 
 void Shuffle_Card()
 {
@@ -79,16 +95,6 @@ void Shuffle_Card()
     //"You should seed the random number generator with a call to time() with srand()"
 }
 
-
-
-
-
-
-
-
-
-
-//------------------------------------------------------------------------------------
 void testUnicode() { //just a test for unicode characters. works on mac.
 
     printf(SPADE);
@@ -97,7 +103,6 @@ void testUnicode() { //just a test for unicode characters. works on mac.
     printf(HEART);
     printf("\n");
 }
-//------------------------------------------------------------------------------------
 
 int main(void) {
 
@@ -107,21 +112,49 @@ int main(void) {
     scanf("%s", player_name);
     printf("\n%s lets play go fish!\n", player_name);
 
-    testUnicode();
+    card* currObj = NULL;
+    card* deck_head = NULL;
+    card* lastObj = NULL;
 
-    card* deck_head = (card*)malloc(sizeof(card));
+    testUnicode(); //the output of these symbols work on windows and mac!
+
+    deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
+    lastObj = deck_head;
 
-    for (int i = 0; i < 9; i++) //number of faces
+    for (int i = 1; i < 10; i++) //number of faces
     {
         for (int j = 0; j < 4; j++) //card suit
         {
-            card* currObj = (card*)malloc(sizeof(card));
-            CardNode_Create(currObj, i, j, NULL); //fix passing int arg for char instead.
-            CardNode_InsertAfter(currObj, deck_head);
+            char temp;
+            if (j == 0) {
+                temp = 's';
+            }
+            else if (j == 1) {
+                temp = 'h';
+            }
+            else if (j == 2) {
+                temp = 'd';
+            }
+            else {
+                temp = 'c';
+            }
+            currObj = (card*)malloc(sizeof(card));
+            CardNode_Create(currObj, temp, i, NULL); 
+            CardNode_InsertAfter(lastObj, currObj);
+            lastObj = currObj;
         }
     }
 
+    //Print linked list.. deck
+    currObj = deck_head;
+    while (currObj != NULL) {
+        CardNode_PrintNodeData(currObj);
+        currObj = IntNode_GetNext(currObj);
+        
+    }
+
+    free(deck_head);
     return 0;
 }
 
