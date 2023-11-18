@@ -24,12 +24,11 @@
 #endif
 
 
-
 typedef struct card_s {			//can add or change to this but not delete any preexisting
 
     char suit; //s - spade, h - heart, d - diamond, c - club
     int face;
-    struct card_s* next;
+    struct card_s* next; //card.next... this is a pointer to an address of type card.
 
 } card;
 
@@ -42,31 +41,31 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
-
     tmpNext = thisCard->next; // Remember next
     thisCard->next = newCard; // this -- new -- ?
     newCard->next = tmpNext;  // this -- new -- next
 }
 
 void CardNode_PrintNodeData(card* thisCard) {
-    
+   
     if (thisCard->suit == 's') {
-        printf("%d ", thisCard->face);
+        printf("%d", thisCard->face);
         printf(SPADE);
         printf("\n");
     }
     else if (thisCard->suit == 'h') {
-        printf("%d ", thisCard->face);
+        printf("%d", thisCard->face);
         printf(HEART);
         printf("\n");
     }
     else if (thisCard->suit== 'c') {
-        printf("%d ", thisCard->face);
+        printf("%d", thisCard->face);
         printf(CLUB);
         printf("\n");
     }
+
     else if (thisCard -> suit == 'd') {
-        printf("%d ", thisCard->face);
+        printf("%d", thisCard->face);
         printf(DIAMOND);
         printf("\n");
     }
@@ -77,26 +76,90 @@ void CardNode_PrintNodeData(card* thisCard) {
 }
 
 // Grab location pointed by nextNodePtr
-card* IntNode_GetNext(card* thisCard) {
+card* CardNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
 
-void Shuffle_Card()
+void swapCards(card* deck_head, int pos1, int pos2) {
+
+    int temp;
+}
+
+void shuffleCards(card* deck_head,card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
-    printf("%d\n", rand() % 37);
+    currObj = deck_head;
+    card* prevObj1, * prevObj2, * card1_swap, * card2_swap;
+    prevObj1 = NULL;
+    prevObj2 = NULL;
 
-    //j = 1  =>  rand() % 37 -> 10 <- move p2 from headObj 10 times
-    //J = 2  =>  rand() % 37 -> 20 <- move p2 from headObj 20 times
-    // set curr to head of the list
-    // while (curr is not null)
-    // {
-    //      do something
-    //      curr=curr->next //or use Node_GetNext(function)
-    // }
-    //"should work with any size deck of cards"
-    //"[see sec 2.24 Random numbers in your zyBooks]"
-    //"You should seed the random number generator with a call to time() with srand()"
+
+    for (int i = 0; i < 100; i++)
+    {
+        for (int j = 2; j < num_cards - 1; j++)
+        {
+            int pos1 = j;
+            int pos2 = rand() % 37;
+            int count = 1;
+
+            if (pos1 == pos2) //without this, you will sometimes have compilation errors.
+            {
+                continue; //if same do nothing.
+            }
+            else if (pos2 == 1 || pos2 == 0) //dont bother cant read it 
+            {
+                continue;
+            }
+
+            if (pos1 != pos2 && pos2 != 1)
+            {
+                while (currObj != NULL && count <= num_cards)
+                {
+                    if (count == pos1 - 1) {
+                        prevObj1 = currObj;
+                    }
+                    if (count == pos1) {
+                        card1_swap = currObj;
+                    }
+                    if (count == pos2 - 1) {
+                        prevObj2 = currObj;
+                    }
+                    if (count == pos2) {
+                        card2_swap = currObj;
+                    }
+                    currObj = currObj->next;
+                    count++;
+                }
+
+                if (card1_swap != NULL && card2_swap != NULL)
+                {
+                    prevObj1->next = card2_swap;
+                    prevObj2->next = card1_swap;
+
+                    currObj = card1_swap->next;
+                    card1_swap->next = card2_swap->next;
+                    card2_swap->next = currObj;
+
+                    if (prevObj1 == NULL) //compile errors without this.
+                    {
+                        deck_head = card2_swap;
+                    }
+                    else if (prevObj1 == NULL)
+                    {
+                        deck_head = card1_swap;
+                    }
+                }
+
+
+
+            }
+
+
+
+
+        }
+    }
+
 }
 
 void testUnicode() { //just a test for unicode characters. works on mac.
@@ -106,6 +169,16 @@ void testUnicode() { //just a test for unicode characters. works on mac.
     printf(DIAMOND);
     printf(HEART);
     printf("\n");
+}
+
+void printDeck(card* deck_head, card* currObj) {
+
+    //Print linked list.. deck
+    currObj = deck_head;
+    while (currObj != NULL) {
+        CardNode_PrintNodeData(currObj);
+        currObj = CardNode_GetNext(currObj);
+    }
 }
 
 int main(void) {
@@ -126,7 +199,9 @@ int main(void) {
     CardNode_Create(deck_head, -1, -1, NULL);
     lastObj = deck_head;
 
-    for (int i = 1; i < 10; i++) //number of faces
+    //Generate deck of cards
+    int num_cards = 0;
+    for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
         for (int j = 0; j < 4; j++) //card suit
         {
@@ -147,16 +222,14 @@ int main(void) {
             CardNode_Create(currObj, temp, i, NULL); 
             CardNode_InsertAfter(lastObj, currObj);
             lastObj = currObj;
+            num_cards++;
         }
     }
-
-    //Print linked list.. deck
-    currObj = deck_head;
-    while (currObj != NULL) {
-        CardNode_PrintNodeData(currObj);
-        currObj = IntNode_GetNext(currObj);
-        
-    }
+    printf("Original deck: \n");
+    printDeck(deck_head, currObj); //check to see if deck formed correctly.
+    shuffleCards(deck_head,currObj, num_cards);
+    printf("\nShuffled deck: \n");
+    printDeck(deck_head, currObj); //check shuffled deck
 
     free(deck_head);
     return 0;
