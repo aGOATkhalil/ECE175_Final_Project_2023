@@ -24,6 +24,7 @@
 #endif
 
 
+
 typedef struct card_s {			//can add or change to this but not delete any preexisting
 
     char suit; //s - spade, h - heart, d - diamond, c - club
@@ -80,24 +81,23 @@ card* CardNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
 
-void swapCards(card* deck_head, int pos1, int pos2) {
-
-    int temp;
-}
 
 void shuffleCards(card* deck_head,card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
     currObj = deck_head;
-    card* prevObj1, * prevObj2, * card1_swap, * card2_swap;
-    prevObj1 = NULL;
-    prevObj2 = NULL;
+    card* temp, * prevObj1, * prevObj2;
+    card* card1_swap = deck_head;
+    card* card2_swap = deck_head;
 
 
-    for (int i = 0; i < 100; i++)
+    
+    for (int i = 1; i < 1000; i++) //shuffle at least two hundred times
     {
+        /*
         for (int j = 2; j < num_cards - 1; j++)
         {
+            
             int pos1 = j;
             int pos2 = rand() % 37;
             int count = 1;
@@ -138,28 +138,81 @@ void shuffleCards(card* deck_head,card* currObj, int num_cards) //Fisher-Yates s
 
                     currObj = card1_swap->next;
                     card1_swap->next = card2_swap->next;
-                    card2_swap->next = currObj;
+                    card2_swap->next = currObj->next;
 
                     if (prevObj1 == NULL) //compile errors without this.
                     {
                         deck_head = card2_swap;
+                        break;
                     }
                     else if (prevObj1 == NULL)
                     {
                         deck_head = card1_swap;
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
 
+            }
+        }
+        */
+        /*
+        int rand_num = rand() % num_cards;
 
+        for (int j = 1; j <= rand_num; j++) { //move card1 to node rand_num
+            card1_swap = card1_swap->next;
+            prevObj1 = card1_swap;
 
+            if (card1_swap == NULL) {
+                continue;
+            }
+        }
+
+        for (int j = 1; j <= i; j++) {
+            card2_swap = card2_swap->next;
+            prevObj2 = card2_swap;
+            
+            if (card2_swap == NULL) {
+                continue;
+            }
+        }
+
+        temp = card1_swap->next;
+        card1_swap->next = card2_swap->next;
+        card2_swap->next = temp->next;
+
+        CardNode_InsertAfter(prevObj1, card1_swap);
+        CardNode_InsertAfter(prevObj2, card2_swap);
+        */
+    
+        for (int j = 0; j < num_cards; j++) {
+
+            int random_index = rand() % num_cards;
+
+            // Find the nodes to swap
+            card* card1_swap = deck_head;
+            card* card2_swap = deck_head;
+
+            for (int k = 0; k < j; k++) {
+                card1_swap = CardNode_GetNext(card1_swap);
             }
 
+            for (int k = 0; k < random_index; k++) {
+                card2_swap = CardNode_GetNext(card2_swap);
+            }
 
-
-
+            // Swap the values (face and suit)
+            int temp_face = card1_swap->face;
+            char temp_suit = card1_swap->suit;
+            card1_swap->face = card2_swap->face;
+            card1_swap->suit = card2_swap->suit;
+            card2_swap->face = temp_face;
+            card2_swap->suit = temp_suit;
         }
-    }
 
+    }
 }
 
 void testUnicode() { //just a test for unicode characters. works on mac.
@@ -173,12 +226,16 @@ void testUnicode() { //just a test for unicode characters. works on mac.
 
 void printDeck(card* deck_head, card* currObj) {
 
+    int deck_size = 0;
+
     //Print linked list.. deck
-    currObj = deck_head;
+    currObj = deck_head->next;
     while (currObj != NULL) {
         CardNode_PrintNodeData(currObj);
         currObj = CardNode_GetNext(currObj);
+        deck_size++;
     }
+    printf("\nDeck size: %d\n", deck_size);
 }
 
 int main(void) {
@@ -232,6 +289,7 @@ int main(void) {
     printDeck(deck_head, currObj); //check shuffled deck
 
     free(deck_head);
+    free(currObj);
     return 0;
 }
 
