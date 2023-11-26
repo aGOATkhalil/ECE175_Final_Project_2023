@@ -22,3 +22,8 @@ else()
     set(HEART "\\xE2\\x99\\xA5")
     set(DIAMOND "\\xE2\\x99\\xA6")
 endif()
+
+
+if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif()

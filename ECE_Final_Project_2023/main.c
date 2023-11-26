@@ -1,9 +1,6 @@
-// CMakeProject_Khalil.c : Defines the entry point for the application.
-//
 // See final_project_notes.txt in the repo for the pseudocode.
 
 
-#include "CMakeProject_Khalil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,16 +24,22 @@
 typedef struct card_s {			//can add or change to this but not delete any preexisting
 
     char suit; //s - spade, h - heart, d - diamond, c - club
-    int face;
+    int face; //1 - ACE
     struct card_s* next; //card.next... this is a pointer to an address of type card.
 
 } card;
+
+typedef struct player_s {
+
+    char name[100];
+    card* hand;
+
+}player;
 
 void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->suit = suit;
     thisCard->face = face;
     thisCard->next = nextCard;
-
 }
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
@@ -63,7 +66,6 @@ void CardNode_PrintNodeData(card* thisCard) {
         printf(CLUB);
         printf("\n");
     }
-
     else if (thisCard->suit == 'd') {
         printf("%d", thisCard->face);
         printf(DIAMOND);
@@ -72,135 +74,81 @@ void CardNode_PrintNodeData(card* thisCard) {
     else {
         printf("\n");
     }
-
 }
 
-// Grab location pointed by nextNodePtr
 card* CardNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
 
-void swapCards(card* deck_head, int pos1, int pos2) {
-
-    int temp;
-}
 
 void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
     currObj = deck_head;
-    card* prevObj1, * prevObj2, * card1_swap, * card2_swap;
-    prevObj1 = NULL;
-    prevObj2 = NULL;
+    card* temp, * prevObj1, * prevObj2;
 
-
-    for (int i = 0; i < 100; i++)
+    for (int i = 1; i < 1000; i++) //shuffle num times
     {
-        for (int j = 2; j < num_cards - 1; j++)
-        {
-            int pos1 = j;
-            int pos2 = rand() % 37;
-            int count = 1;
+        for (int j = 0; j < num_cards; j++) {
 
-            if (pos1 == pos2) //without this, you will sometimes have compilation errors.
-            {
-                continue; //if same do nothing.
+            int random_index = rand() % num_cards;
+
+            // Find the nodes to swap
+            card* card1_swap = deck_head->next;
+            card* card2_swap = deck_head->next;
+
+            for (int k = 0; k < j; k++) {
+                card1_swap = CardNode_GetNext(card1_swap);
             }
-            else if (pos2 == 1 || pos2 == 0) //dont bother cant read it 
-            {
-                continue;
-            }
-
-            if (pos1 != pos2 && pos2 != 1)
-            {
-                while (currObj != NULL && count <= num_cards)
-                {
-                    if (count == pos1 - 1) {
-                        prevObj1 = currObj;
-                    }
-                    if (count == pos1) {
-                        card1_swap = currObj;
-                    }
-                    if (count == pos2 - 1) {
-                        prevObj2 = currObj;
-                    }
-                    if (count == pos2) {
-                        card2_swap = currObj;
-                    }
-                    currObj = currObj->next;
-                    count++;
-                }
-
-                if (card1_swap != NULL && card2_swap != NULL)
-                {
-                    prevObj1->next = card2_swap;
-                    prevObj2->next = card1_swap;
-
-                    currObj = card1_swap->next;
-                    card1_swap->next = card2_swap->next;
-                    card2_swap->next = currObj;
-
-                    if (prevObj1 == NULL) //compile errors without this.
-                    {
-                        deck_head = card2_swap;
-                    }
-                    else if (prevObj1 == NULL)
-                    {
-                        deck_head = card1_swap;
-                    }
-                }
-
-
-
+            for (int k = 0; k < random_index; k++) {
+                card2_swap = CardNode_GetNext(card2_swap);
             }
 
-
-
-
+            // Swap the values (face and suit)
+            int temp_face = card1_swap->face;
+            char temp_suit = card1_swap->suit;
+            card1_swap->face = card2_swap->face;
+            card1_swap->suit = card2_swap->suit;
+            card2_swap->face = temp_face;
+            card2_swap->suit = temp_suit;
         }
+
     }
-
-}
-
-void testUnicode() { //just a test for unicode characters. works on mac.
-
-    printf(SPADE);
-    printf(CLUB);
-    printf(DIAMOND);
-    printf(HEART);
-    printf("\n");
 }
 
 void printDeck(card* deck_head, card* currObj) {
 
     //Print linked list.. deck
-    currObj = deck_head;
+    currObj = deck_head->next;
     while (currObj != NULL) {
         CardNode_PrintNodeData(currObj);
         currObj = CardNode_GetNext(currObj);
     }
 }
 
+void testUnicode(); //just a test for unicode characters. works on mac
+void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number of tests in this function.
+
 int main(void) {
 
-
     char player_name[100]; //may change later. names may not always be just 100 char long.
+    player player_1; //also could change if we want extra credit. 
+    player player_2;
+
     printf("Enter your name: ");
-    scanf("%s", player_name);
-    printf("\n%s lets play go fish!\n", player_name);
+    scanf("%s", player_1.name);
+    printf("\n%s lets play go fish!\n", player_1.name);
 
     card* currObj = NULL;
     card* deck_head = NULL;
     card* lastObj = NULL;
-
-    //testUnicode(); //the output of these symbols work on windows and mac!
-
     deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
     lastObj = deck_head;
 
     //Generate deck of cards
     int num_cards = 0;
+    int temp_face;
     for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
         for (int j = 0; j < 4; j++) //card suit
@@ -218,6 +166,7 @@ int main(void) {
             else {
                 temp = 'c';
             }
+
             currObj = (card*)malloc(sizeof(card));
             CardNode_Create(currObj, temp, i, NULL);
             CardNode_InsertAfter(lastObj, currObj);
@@ -225,15 +174,73 @@ int main(void) {
             num_cards++;
         }
     }
-    printf("Original deck: \n");
-    printDeck(deck_head, currObj); //check to see if deck formed correctly.
-    shuffleCards(deck_head, currObj, num_cards);
-    printf("\nShuffled deck: \n");
-    printDeck(deck_head, currObj); //check shuffled deck
+
+    char enter_menu; //comment this part out when game is finished.
+    while (1)
+    {
+        printf("Enter game dev menu? (y/n)");
+        scanf("%c", &enter_menu);
+
+        if (enter_menu == 'n') {
+            break;
+        }
+        else if (enter_menu == 'y') {
+            testGame(deck_head, currObj, num_cards); //function to test functionality of program.
+            break;
+        }
+        else {
+            continue;
+        }
+    }
+
+    //deal cards here
+
+
 
     free(deck_head);
+    free(currObj);
     return 0;
 }
 
 
+void testGame(card* deck_head, card* currObj, int num_cards) {
 
+    int user_inp;
+    printf("\n----------------------------------------------------\n");
+    printf("Development Menu\n");
+    printf("1. Check shuffle functionality\n");
+    printf("2, Check symbol print out\n");
+
+    scanf("%d", &user_inp);
+
+    if (user_inp == 1) {
+        int num_shuffles;
+        printf("How many times would you like to shuffle the deck: ");
+        scanf("%d", &num_shuffles);
+
+        printf("\nOriginal deck: \n");
+        printDeck(deck_head, currObj); // check to see if deck formed correctly.
+
+        printf("\nBeginning test\n");
+        for (int i = 0; i < num_shuffles; i++) {
+            shuffleCards(deck_head, currObj, num_cards);
+            printf("\nShuffle #%d\n", i + 1);
+            printDeck(deck_head, currObj);
+
+        }
+    }
+    else if (user_inp == 2) {
+        printf("\nPrinting symbols....\n");
+        testUnicode(); //the output of these symbols work on windows and mac!
+    }
+
+}
+
+void testUnicode() { //just a test for unicode characters. works on mac.
+
+    printf(SPADE);
+    printf(CLUB);
+    printf(DIAMOND);
+    printf(HEART);
+    printf("\n");
+}
