@@ -46,6 +46,55 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->next = nextCard;
 }
 
+card* find_card(card* temp, int* face, char* suit)
+{
+    card* curr = CardNode_GetNext(temp);
+
+    while (curr != NULL)
+    {
+        if (curr->face == face && curr->suit == suit)
+        {
+            return curr;
+        }
+        curr = CardNode_GetNext(curr);
+    }
+
+    return curr;
+}
+
+void delete_card(card* temp, int face, char suit) {
+
+    card* prev;
+    card* target = find_card(temp, face, suit);
+
+    if (target == NULL) {
+        printf("no card with %d%c\n", face, suit); //test, shouldn't need in final
+    }
+    else
+    {
+        if (prev->next == target)
+        {
+            prev->next = target->next;
+        }
+        else
+        {
+            while (prev->next != target)
+            {
+                prev = prev->next;
+            }
+            if (target->next == NULL) //last node
+            {
+                prev->next = NULL;
+            }
+            else
+            {
+                prev->next = target->next;
+            }
+        }
+        free(target);
+    }
+}
+
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
     tmpNext = thisCard->next; // Remember next
@@ -149,6 +198,10 @@ int main(void) {
     deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
     lastObj = deck_head;
+    card* comp_deck_head = (card*)malloc(sizeof(card));
+    CardNode_Create(comp_deck_head, -1, -1, NULL);
+    card* player_deck_head = (card*)malloc(sizeof(card));
+    CardNode_Create(player_deck_head, -1, -1, NULL);
 
     //Generate deck of cards
     int num_cards = 0;
@@ -197,7 +250,34 @@ int main(void) {
         }
     }
 
+    shuffleCards(deck_head, currObj, 1); //shuffling 1 time for now
+
     //deal cards here
+    for (int i = 0; i < 6; ++i)
+    {
+        card* temp1 = Node_GetNext(deck_head);
+        card* currCard1;
+
+        currCard1->suit = temp1->suit;
+        currCard1->face = temp1->face;
+        
+        CardNode_InsertAfter(player_deck_head, currCard1);
+        delete_card(temp1, currCard1->suit, currCard1->face);
+
+        card* temp2 = Node_GetNext(deck_head);
+        card* currCard2;
+
+        currCard2->suit = temp2->suit;
+        currCard2->face = temp2->face;
+        
+        CardNode_InsertAfter(comp_deck_head, currCard2);
+        delete_card(temp2, currCard2->suit, currCard2->face);
+    }
+
+    printf("--------------- Test -------------\n");
+    printDeck(deck_head, currObj);
+    printDeck(player_deck_head, currObj);
+    printDeck(comp_deck_head, currObj);
 
 
 
