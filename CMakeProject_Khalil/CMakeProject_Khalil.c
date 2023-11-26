@@ -82,7 +82,7 @@ card* CardNode_GetNext(card* thisCard) {
 }
 
 
-void shuffleCards(card* deck_head,card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
+void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
     currObj = deck_head;
@@ -95,8 +95,8 @@ void shuffleCards(card* deck_head,card* currObj, int num_cards) //Fisher-Yates s
             int random_index = rand() % num_cards;
 
             // Find the nodes to swap
-            card* card1_swap = deck_head;
-            card* card2_swap = deck_head;
+            card* card1_swap = deck_head->next;
+            card* card2_swap = deck_head->next;
 
             for (int k = 0; k < j; k++) {
                 card1_swap = CardNode_GetNext(card1_swap);
@@ -185,6 +185,7 @@ int main(void) {
             num_cards++;
         }
     }
+
     printf("Original deck: \n");
     printDeck(deck_head, currObj); //check to see if deck formed correctly.
     shuffleCards(deck_head,currObj, num_cards);
