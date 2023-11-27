@@ -88,7 +88,6 @@ card* CardNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
 
-
 void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
@@ -248,7 +247,7 @@ int main(void) {
     }
 
     shuffleCards(deck_head, currObj, num_cards); //num_cards must be in the argument.
-    printDeck(deck_head, currObj); //print for testing.
+    //printDeck(deck_head, currObj); //print for testing.
 
     //card* comp_hand = NULL;
     //lastObj = NULL;
@@ -277,8 +276,8 @@ int main(void) {
     printf("--------------- Test -------------\n");
     printf("Shuffled deck\n");
     printDeck(deck_head, currObj);
-    printf("\nComputer deck: \n");
-    //printDeck(player_deck_head->next, currObj); //the deck is seperate from a player's hand.
+    //printf("\nComputer deck: \n");
+    ////printDeck(player_deck_head->next, currObj); //the deck is seperate from a player's hand.
 
 
 
