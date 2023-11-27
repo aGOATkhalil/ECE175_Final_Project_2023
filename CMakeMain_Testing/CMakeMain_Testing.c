@@ -1,7 +1,7 @@
-﻿// CMakeMain_Testing.cpp : Defines the entry point for the application.
+﻿// CMakeMain_Testing.c : Defines the entry point for the application.
 //
 
-// CMakeProject_Khalil.c : Defines the entry point for the application.
+// CMakeProject_Testing.c : Defines the entry point for the application.
 //
 // See final_project_notes.txt in the repo for the pseudocode.
 //Test functions are below main(). Useful functions are above main().
