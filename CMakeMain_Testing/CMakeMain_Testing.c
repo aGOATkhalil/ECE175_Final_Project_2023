@@ -250,31 +250,29 @@ int main(void) {
     shuffleCards(deck_head, currObj, num_cards); //num_cards must be in the argument.
     printDeck(deck_head, currObj); //print for testing.
 
-    card* comp_hand = NULL;
-    lastObj = NULL;
-    card* comp_deck_head = (card*)malloc(sizeof(card)); //make player hand
-    CardNode_Create(comp_deck_head, -1, -1, NULL);
-    lastObj = comp_deck_head;
-    //card* player_hand = (card*)malloc(sizeof(card)); //make computer hand
-    //CardNode_Create(player_hand, -1, -1, NULL);
+    //card* comp_hand = NULL;
+    //lastObj = NULL;
+    //card* comp_deck_head = (card*)malloc(sizeof(card)); //make player hand
+    //CardNode_Create(comp_deck_head, -1, -1, NULL);
+    //lastObj = comp_deck_head;
+    ////card* player_hand = (card*)malloc(sizeof(card)); //make computer hand
+    ////CardNode_Create(player_hand, -1, -1, NULL);
 
-
-
-    //deal cards here
-    currObj = deck_head->next;
-    for (int i = 0; i < 6; ++i)
-    {
-        comp_hand = (card*)malloc(sizeof(card));
-        CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
-        CardNode_InsertAfter(lastObj, currObj);
-        lastObj = currObj;
-        currObj = currObj->next;
-        //CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
-        //CardNode_InsertAfter(lastObj, comp_hand);
-        //deleteCard(deck_head, currObj->face, currObj->suit);
-        //currObj = currObj->next;
-       
-    }
+    ////deal cards here
+    //currObj = deck_head->next;
+    //for (int i = 0; i < 6; ++i)
+    //{
+    //    comp_hand = (card*)malloc(sizeof(card));
+    //    CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
+    //    CardNode_InsertAfter(lastObj, currObj);
+    //    lastObj = currObj;
+    //    currObj = currObj->next;
+    //    //CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
+    //    //CardNode_InsertAfter(lastObj, comp_hand);
+    //    //deleteCard(deck_head, currObj->face, currObj->suit);
+    //    //currObj = currObj->next;
+    //   
+    //}
 
     printf("--------------- Test -------------\n");
     printf("Shuffled deck\n");
@@ -286,8 +284,8 @@ int main(void) {
 
     free(deck_head);
     free(currObj);
-    free(comp_hand);
-    free(comp_deck_head);
+    //free(comp_hand);
+    //free(comp_deck_head);
     //free(player_hand);
     return 0;
 }
