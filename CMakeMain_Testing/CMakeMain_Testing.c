@@ -49,54 +49,6 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->next = nextCard;
 }
 
-card* find_card(card* temp, int* face, char* suit)
-{
-    card* curr = CardNode_GetNext(temp);
-
-    while (curr != NULL)
-    {
-        if (curr->face == face && curr->suit == suit)
-        {
-            return curr;
-        }
-        curr = CardNode_GetNext(curr);
-    }
-
-    return curr;
-}
-
-void delete_card(card* temp, int face, char suit) {
-
-    card* prev;
-    card* target = find_card(temp, face, suit);
-
-    if (target == NULL) {
-        printf("no card with %d%c\n", face, suit); //test, shouldn't need in final
-    }
-    else
-    {
-        if (prev->next == target)
-        {
-            prev->next = target->next;
-        }
-        else
-        {
-            while (prev->next != target)
-            {
-                prev = prev->next;
-            }
-            if (target->next == NULL) //last node
-            {
-                prev->next = NULL;
-            }
-            else
-            {
-                prev->next = target->next;
-            }
-        }
-        free(target);
-    }
-}
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
@@ -182,6 +134,53 @@ void printDeck(card* deck_head, card* currObj) {
     }
 }
 
+
+card* findCard(card* temp, int* face, char* suit)
+{
+    card* curr = CardNode_GetNext(temp);
+
+    while (curr != NULL)
+    {
+        if (curr->face == face && curr->suit == suit)
+        {
+            return curr;
+        }
+        curr = CardNode_GetNext(curr);
+    }
+
+    return curr;
+}
+
+void deleteCard(card* temp, int face, char suit) {
+
+    card* prev = temp;
+    card* target = findCard(temp, face, suit);
+
+    if (target == NULL) {
+        printf("no card with %d%c\n", face, suit); //test, shouldn't need in final
+    }
+    else
+    {
+        if (prev->next == target) {
+            temp->next = target->next;
+        }
+        else  
+        {
+            while (prev->next != target) {
+                prev = prev->next;
+            }
+            if (target->next == NULL) { //
+                prev->next = NULL;
+            }
+            else {
+                prev->next = target->next;
+            }
+        }
+        free(target);
+    }
+}
+
+
 void testUnicode(); //just a test for unicode characters. works on mac
 void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number of tests in this function.
 
@@ -201,14 +200,9 @@ int main(void) {
     deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
     lastObj = deck_head;
-    card* comp_deck_head = (card*)malloc(sizeof(card));
-    CardNode_Create(comp_deck_head, -1, -1, NULL);
-    card* player_deck_head = (card*)malloc(sizeof(card));
-    CardNode_Create(player_deck_head, -1, -1, NULL);
 
     //Generate deck of cards
     int num_cards = 0;
-    int temp_face;
     for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
         for (int j = 0; j < 4; j++) //card suit
@@ -253,39 +247,48 @@ int main(void) {
         }
     }
 
-    shuffleCards(deck_head, currObj, 1); //shuffling 1 time for now
+    shuffleCards(deck_head, currObj, num_cards); //num_cards must be in the argument.
+    printDeck(deck_head, currObj); //print for testing.
+
+    card* comp_hand = NULL;
+    lastObj = NULL;
+    card* comp_deck_head = (card*)malloc(sizeof(card)); //make player hand
+    CardNode_Create(comp_deck_head, -1, -1, NULL);
+    lastObj = comp_deck_head;
+    //card* player_hand = (card*)malloc(sizeof(card)); //make computer hand
+    //CardNode_Create(player_hand, -1, -1, NULL);
+
+
 
     //deal cards here
+    currObj = deck_head->next;
     for (int i = 0; i < 6; ++i)
     {
-        card* temp1 = Node_GetNext(deck_head);
-        card* currCard1;
-
-        currCard1->suit = temp1->suit;
-        currCard1->face = temp1->face;
-
-        CardNode_InsertAfter(player_deck_head, currCard1);
-        delete_card(temp1, currCard1->suit, currCard1->face);
-
-        card* temp2 = Node_GetNext(deck_head);
-        card* currCard2;
-
-        currCard2->suit = temp2->suit;
-        currCard2->face = temp2->face;
-
-        CardNode_InsertAfter(comp_deck_head, currCard2);
-        delete_card(temp2, currCard2->suit, currCard2->face);
+        comp_hand = (card*)malloc(sizeof(card));
+        CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
+        CardNode_InsertAfter(lastObj, currObj);
+        lastObj = currObj;
+        currObj = currObj->next;
+        //CardNode_Create(comp_hand, currObj->suit, currObj->face, NULL);
+        //CardNode_InsertAfter(lastObj, comp_hand);
+        //deleteCard(deck_head, currObj->face, currObj->suit);
+        //currObj = currObj->next;
+       
     }
 
     printf("--------------- Test -------------\n");
+    printf("Shuffled deck\n");
     printDeck(deck_head, currObj);
-    printDeck(player_deck_head, currObj);
-    printDeck(comp_deck_head, currObj);
+    printf("\nComputer deck: \n");
+    //printDeck(player_deck_head->next, currObj); //the deck is seperate from a player's hand.
 
 
 
     free(deck_head);
     free(currObj);
+    free(comp_hand);
+    free(comp_deck_head);
+    //free(player_hand);
     return 0;
 }
 
