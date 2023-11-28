@@ -252,7 +252,6 @@ int main(void) {
     CardNode_Create(player_deck_head, -1, -1, NULL);
     prev_player_card = player_deck_head;
 
-
     deck_head = deck_head->next;
     int toggle = 0;
     for (int i = 0; i < 6 * 2; i++)
@@ -263,8 +262,7 @@ int main(void) {
             CardNode_InsertAfter(prev_comp_card, comp_hand);
             toggle = 1;
         }
-        else
-        {
+        else {
             player_hand = (card*)malloc(sizeof(card));
             CardNode_Create(player_hand, deck_head->suit, deck_head->face, NULL);
             CardNode_InsertAfter(prev_player_card, player_hand);
@@ -276,11 +274,9 @@ int main(void) {
 
     printf("\nComputer hand:\n");
     printDeck(comp_deck_head, comp_hand);
-
     printf("\nPlayer hand:\n");
     printDeck(player_deck_head, player_hand);
 
-   
     char enter_menu; //comment this part out when game is finished. always put at bottom.
     while (1)
     {
