@@ -1,10 +1,13 @@
-﻿// CMakeProject_Khalil.c : Defines the entry point for the application.
+﻿// CMakeMain_Testing.c : Defines the entry point for the application.
+//
+
+// CMakeProject_Testing.c : Defines the entry point for the application.
 //
 // See final_project_notes.txt in the repo for the pseudocode.
 //Test functions are below main(). Useful functions are above main().
 
 
-#include "CMakeProject_Khalil.h"
+#include "CMakeMain_Testing.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,54 +49,6 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->next = nextCard;
 }
 
-card* find_card(card* temp, int* face, char* suit)
-{
-    card* curr = CardNode_GetNext(temp);
-
-    while (curr != NULL)
-    {
-        if (curr->face == face && curr->suit == suit)
-        {
-            return curr;
-        }
-        curr = CardNode_GetNext(curr);
-    }
-
-    return curr;
-}
-
-void delete_card(card* temp, int face, char suit) {
-
-    card* prev;
-    card* target = find_card(temp, face, suit);
-
-    if (target == NULL) {
-        printf("no card with %d%c\n", face, suit); //test, shouldn't need in final
-    }
-    else
-    {
-        if (prev->next == target)
-        {
-            prev->next = target->next;
-        }
-        else
-        {
-            while (prev->next != target)
-            {
-                prev = prev->next;
-            }
-            if (target->next == NULL) //last node
-            {
-                prev->next = NULL;
-            }
-            else
-            {
-                prev->next = target->next;
-            }
-        }
-        free(target);
-    }
-}
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
@@ -103,7 +58,7 @@ void CardNode_InsertAfter(card* thisCard, card* newCard) {
 }
 
 void CardNode_PrintNodeData(card* thisCard) {
-   
+
     if (thisCard->suit == 's') {
         printf("%d", thisCard->face);
         printf(SPADE);
@@ -119,29 +74,28 @@ void CardNode_PrintNodeData(card* thisCard) {
         printf(CLUB);
         printf("\n");
     }
-    else if (thisCard -> suit == 'd') {
+    else if (thisCard->suit == 'd') {
         printf("%d", thisCard->face);
         printf(DIAMOND);
         printf("\n");
     }
     else {
         printf("\n");
-    } 
+    }
 }
 
 card* CardNode_GetNext(card* thisCard) {
     return thisCard->next;
 }
 
-
 void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
     currObj = deck_head;
     card* temp, * prevObj1, * prevObj2;
-    
+
     for (int i = 1; i < 1000; i++) //shuffle num times
-    {    
+    {
         for (int j = 0; j < num_cards; j++) {
 
             int random_index = rand() % num_cards;
@@ -179,15 +133,61 @@ void printDeck(card* deck_head, card* currObj) {
     }
 }
 
+
+card* findCard(card* temp, int* face, char* suit)
+{
+    card* curr = CardNode_GetNext(temp);
+    while (curr != NULL)
+    {
+        if (curr->face == face && curr->suit == suit)
+        {
+            return curr;
+        }
+        curr = CardNode_GetNext(curr);
+    }
+    return NULL;
+
+}
+
+void deleteCard(card* temp, int face, char suit) {
+
+    card* prev = temp;
+    card* target = findCard(temp, face, suit);
+
+    if (target == NULL) {
+        printf("no card with %d%c\n", face, suit); //test, shouldn't need in final
+    }
+    else {
+        if (prev->next == target) {
+            temp->next = target->next;
+        }
+        else
+        {
+            while (prev->next != target) {
+                prev = prev->next;
+            }
+            if (target->next == NULL) {
+                prev->next = NULL;
+            }
+            else {
+                prev->next = target->next;
+            }
+        }
+        free(target);
+    }
+}
+
+
 void testUnicode(); //just a test for unicode characters. works on mac
 void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number of tests in this function.
+card* copyDeck(card* list);
 
 int main(void) {
 
     char player_name[100]; //may change later. names may not always be just 100 char long.
     player player_1; //also could change if we want extra credit. 
     player player_2;
-    
+
     printf("Enter your name: ");
     scanf("%s", player_1.name);
     printf("\n%s lets play go fish!\n", player_1.name);
@@ -198,14 +198,9 @@ int main(void) {
     deck_head = (card*)malloc(sizeof(card));
     CardNode_Create(deck_head, -1, -1, NULL);
     lastObj = deck_head;
-    card* comp_deck_head = (card*)malloc(sizeof(card));
-    CardNode_Create(comp_deck_head, -1, -1, NULL);
-    card* player_deck_head = (card*)malloc(sizeof(card));
-    CardNode_Create(player_deck_head, -1, -1, NULL);
 
     //Generate deck of cards
     int num_cards = 0;
-    int temp_face;
     for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
         for (int j = 0; j < 4; j++) //card suit
@@ -223,16 +218,66 @@ int main(void) {
             else {
                 temp = 'c';
             }
-            
+
             currObj = (card*)malloc(sizeof(card));
-            CardNode_Create(currObj, temp, i, NULL); 
+            CardNode_Create(currObj, temp, i, NULL);
             CardNode_InsertAfter(lastObj, currObj);
             lastObj = currObj;
             num_cards++;
         }
     }
-    
-    char enter_menu; //comment this part out when game is finished.
+
+    card* original_deck_head = NULL;
+    original_deck_head = (card*)malloc(sizeof(card));
+    original_deck_head = copyDeck(deck_head); //IGNORE FOR NOW
+
+    printf("Original deck: \n"); //TESTING
+    printDeck(deck_head, currObj);
+    printf("\n");
+    shuffleCards(deck_head, currObj, num_cards);
+    printf("\nShuffled deck: \n");
+    printDeck(deck_head, currObj);
+    printf("\n");
+
+    //deal cards here
+    card* comp_hand = NULL; //make computer hand and linked list.
+    card* comp_deck_head = (card*)malloc(sizeof(card));
+    card* prev_comp_card = NULL;
+    CardNode_Create(comp_deck_head, -1, -1, NULL);
+    prev_comp_card = comp_deck_head;
+
+    card* player_hand = NULL;
+    card* player_deck_head = (card*)malloc(sizeof(card)); //make player hand and linked list.
+    card* prev_player_card = NULL;
+    CardNode_Create(player_deck_head, -1, -1, NULL);
+    prev_player_card = player_deck_head;
+
+    deck_head = deck_head->next;
+    int toggle = 0; //manually toggle to hand card to each player 1 by 1.
+    for (int i = 0; i < 6 * 2; i++)
+    {
+        if (toggle == 0) {
+            comp_hand = (card*)malloc(sizeof(card));
+            CardNode_Create(comp_hand, deck_head->suit, deck_head->face, NULL);
+            CardNode_InsertAfter(prev_comp_card, comp_hand);
+            toggle = 1;
+        }
+        else {
+            player_hand = (card*)malloc(sizeof(card));
+            CardNode_Create(player_hand, deck_head->suit, deck_head->face, NULL);
+            CardNode_InsertAfter(prev_player_card, player_hand);
+            toggle = 0;
+        }
+        deleteCard(deck_head, deck_head->face, deck_head->suit);
+        deck_head = deck_head->next;
+    }
+
+    printf("\nComputer hand:\n");
+    printDeck(comp_deck_head, comp_hand);
+    printf("\nPlayer hand:\n");
+    printDeck(player_deck_head, player_hand);
+
+    char enter_menu; //comment this part out when game is finished. always put at bottom.
     while (1)
     {
         printf("Enter game dev menu? (y/n)");
@@ -242,7 +287,7 @@ int main(void) {
             break;
         }
         else if (enter_menu == 'y') {
-            testGame(deck_head, currObj, num_cards); //function to test functionality of program.
+            testGame(deck_head, currObj, comp_deck_head, comp_hand, original_deck_head, num_cards); //function to test functionality of program.
             break;
         }
         else {
@@ -250,66 +295,59 @@ int main(void) {
         }
     }
 
-    shuffleCards(deck_head, currObj, 1); //shuffling 1 time for now
-
-    //deal cards here
-    for (int i = 0; i < 6; ++i)
-    {
-        card* temp1 = Node_GetNext(deck_head);
-        card* currCard1;
-
-        currCard1->suit = temp1->suit;
-        currCard1->face = temp1->face;
-        
-        CardNode_InsertAfter(player_deck_head, currCard1);
-        delete_card(temp1, currCard1->suit, currCard1->face);
-
-        card* temp2 = Node_GetNext(deck_head);
-        card* currCard2;
-
-        currCard2->suit = temp2->suit;
-        currCard2->face = temp2->face;
-        
-        CardNode_InsertAfter(comp_deck_head, currCard2);
-        delete_card(temp2, currCard2->suit, currCard2->face);
-    }
-
-    printf("--------------- Test -------------\n");
-    printDeck(deck_head, currObj);
-    printDeck(player_deck_head, currObj);
-    printDeck(comp_deck_head, currObj);
-
-
-
     free(deck_head);
     free(currObj);
+    free(comp_hand);
+    free(comp_deck_head);
+    free(original_deck_head);
+    free(player_deck_head);
+    free(player_hand);
+
     return 0;
 }
 
 
-void testGame(card* deck_head, card* currObj, int num_cards) {
+void testGame(card* deck_head, card* currObj, card* comp_deck_head, card* comp_hand, card* original_deck_head, int num_cards) {
 
     int user_inp;
     printf("\n----------------------------------------------------\n");
     printf("Development Menu\n");
     printf("1. Check shuffle functionality\n");
     printf("2, Check symbol print out\n");
-
+    printf("3. Check handing cards functinoality\n");
+    printf("4. Show deck\n");
+    printf("\n----------------------------------------------------\n");
     scanf("%d", &user_inp);
-  
+
     if (user_inp == 1) {
         int num_shuffles;
-        printf("How many times would you like to shuffle the deck: ");
-        scanf("%d", &num_shuffles);
+        int user_shuffle_inp;
+        printf("Choose one.\n");
+        printf("1. Shuffle deck n times\n");
+        printf("2. Check to see if all cards are in deck\n");
+        scanf("%d", &user_shuffle_inp);
 
-        printf("\nOriginal deck: \n");
-        printDeck(deck_head, currObj); // check to see if deck formed correctly.
+        if (user_shuffle_inp == 1) {
 
-        printf("\nBeginning test\n");
-        for (int i = 0; i < num_shuffles; i++) {
-            shuffleCards(deck_head, currObj, num_cards);
-            printf("\nShuffle #%d\n", i + 1);
+            printf("1. How many times would you like to shuffle the deck: ");
+            scanf("%d", &num_shuffles);
+
+            printf("\nOriginal deck: \n");
+            printDeck(deck_head, currObj); // check to see if deck formed correctly.
+
+            printf("\nBeginning test\n");
+            for (int i = 0; i < num_shuffles; i++) {
+                shuffleCards(deck_head, currObj, num_cards);
+                printf("\nShuffle #%d\n", i + 1);
+                printDeck(deck_head, currObj);
+            }
+        }
+        else if (user_shuffle_inp == 2) {
+            printf("\n");
             printDeck(deck_head, currObj);
+            printf("\n");
+            printDeck(original_deck_head, currObj);
+            printf("Not available. Still building\n");
 
         }
     }
@@ -317,7 +355,37 @@ void testGame(card* deck_head, card* currObj, int num_cards) {
         printf("\nPrinting symbols....\n");
         testUnicode(); //the output of these symbols work on windows and mac!
     }
+    else if (user_inp == 3) {
+        printf("Shuffled deck\n");
+        printDeck(deck_head, currObj);
+        printf("\nComputer deck: \n");
+        printDeck(comp_deck_head, comp_hand); //the deck is seperate from a player's hand.
+    }
+    else if (user_inp == 4) {
+        printf("\nDeck:\n");
+        printDeck(deck_head, currObj);
 
+    }
+
+}
+
+card* copyDeck(card* list) { //FIX ME! NOT WORKING YET. Not totally needed.
+
+    // Part 1 - the null list
+    if (list == NULL) return NULL;
+
+    // Part 2 - the head element
+    card* newHead = (card*)malloc(sizeof(card));
+
+    // Part 3 - the rest of the list
+    card* p = newHead;
+    list = list->next;
+    while (list != NULL) {
+        p->next = (card*)malloc(sizeof(card));
+        p = p->next;
+        list = list->next;
+    }
+    p->next = NULL;  // terminate last element.
 }
 
 void testUnicode() { //just a test for unicode characters. works on mac.
