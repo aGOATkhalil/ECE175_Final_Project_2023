@@ -291,13 +291,10 @@ int main(void) {
     printDeck(player_deck_head, player_hand);
 
     int book_total = 0;
-
-    while (book_total != 9)
+    while (book_total != 9) //ask for card here. game 'begins'
     {
-        //////////////
         char choice_card;
         int choice;
-
         while (1)
         {
             printf("Which card, (A, 2-9) do you want to ask for? ");
@@ -306,11 +303,9 @@ int main(void) {
             if (choice_card == 'A')
             {
                 choice = 1;
-
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -319,10 +314,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '2')
             {
@@ -331,7 +322,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -340,10 +330,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '3')
             {
@@ -352,7 +338,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -361,10 +346,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '4')
             {
@@ -373,7 +354,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -382,10 +362,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '5')
             {
@@ -394,7 +370,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -403,10 +378,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '6')
             {
@@ -415,7 +386,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -424,10 +394,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '7')
             {
@@ -436,7 +402,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -445,10 +410,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '8')
             {
@@ -457,7 +418,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -466,10 +426,6 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else if (choice_card == '9')
             {
@@ -478,7 +434,6 @@ int main(void) {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(comp_deck_head, choice);
-
                     if (temp != NULL)
                     {
                         player_hand = (card*)malloc(sizeof(card));
@@ -487,19 +442,18 @@ int main(void) {
                         deleteCard(comp_deck_head, temp->face, temp->suit);
                     }
                 }
-                printDeck(comp_deck_head, comp_hand);
-                printf("\n");
-                printDeck(player_deck_head, player_hand);
-                printf("\n");
             }
             else
             {
                 printf("Enter only A, 2-9 for the card\n");
-                continue;
+                continue; //print functions in next lines wont execute if 'continue'
             }
-        }
-        //////////////
 
+            printDeck(comp_deck_head, comp_hand); 
+            printf("\n");
+            printDeck(player_deck_head, player_hand);
+            printf("\n");
+        }
     }
     
 
