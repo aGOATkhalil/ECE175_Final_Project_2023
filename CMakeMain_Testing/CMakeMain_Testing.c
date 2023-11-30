@@ -32,6 +32,7 @@ typedef struct player_s {
     struct card_s* hand;
     struct card_s* head;
     struct card_s* prev;
+    struct card_s* next;
 
 }player;
 
@@ -69,6 +70,7 @@ void CardNode_PrintNodeData(card* thisCard) {
 
     if (thisCard->suit == 's') {
         printf("%d", thisCard->face);
+        printf("%c", something);
         printf("%c", something);
         printf("\n");
     }
@@ -259,7 +261,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                 {
-                    player_pc->head= (card*)malloc(sizeof(card));
+                    player_1->head= (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -275,7 +277,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -307,7 +309,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -323,7 +325,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -339,7 +341,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -355,7 +357,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -371,7 +373,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -387,7 +389,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->head = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -538,7 +540,7 @@ int main(void) {
             break;
         }
         else if (enter_menu == 'y') {
-            testGame(deck_head, currObj, comp_deck_head, comp_hand, original_deck_head, num_cards); //function to test functionality of program.
+            testGame(deck_head, currObj,original_deck_head, num_cards); //function to test functionality of program.
             break;
         }
         else {
@@ -548,17 +550,17 @@ int main(void) {
 
     free(deck_head);
     free(currObj);
-    free(comp_hand);
-    free(comp_deck_head);
+    free(player_pc.hand);
+    free(player_pc.head);
     free(original_deck_head);
-    free(player_deck_head);
-    free(player_hand);
+    free(player_1.head);
+    free(player_1.hand);
 
     return 0;
 }
 
 
-void testGame(card* deck_head, card* currObj, card* comp_deck_head, card* comp_hand, card* original_deck_head, int num_cards) {
+void testGame(card* deck_head, card* currObj, card* original_deck_head, int num_cards) {
 
     int user_inp;
     printf("\n----------------------------------------------------\n");
@@ -610,7 +612,7 @@ void testGame(card* deck_head, card* currObj, card* comp_deck_head, card* comp_h
         printf("Shuffled deck\n");
         printDeck(deck_head, currObj);
         printf("\nComputer deck: \n");
-        printDeck(comp_deck_head, comp_hand); //the deck is seperate from a player's hand.
+        //printDeck(comp_deck_head, comp_hand); //FIX ME
     }
     else if (user_inp == 4) {
         printf("\nDeck:\n");
