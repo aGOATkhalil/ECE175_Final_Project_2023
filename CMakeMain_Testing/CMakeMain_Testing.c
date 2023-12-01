@@ -860,10 +860,8 @@ int main(void) {
         
         askForCard(&player_1, &player_pc, &whos_turn); //game starts with player asking pc 
 
+        //addCard() function... its inside askForCard already
 
-        //addCard() function
-
-        
         printDeck(player_pc.head, player_pc.hand);
         printf("\n");
         printDeck(player_1.head, player_1.hand);
