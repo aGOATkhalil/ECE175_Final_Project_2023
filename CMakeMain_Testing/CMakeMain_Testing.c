@@ -36,8 +36,8 @@ typedef struct player_s {
 
 }player;
 
-void compAskForCard();
-void playerAskForCard(player* player_pc, player* player_1);
+void compAskForCard(player* player_1, player* player_pc);
+void askForCard(player* player_1, player* player_pc, int *whos_turn);
 void checkDeckForBooks();
 card* findCardFace(card* temp, int* face);
 void deleteCard(card* temp, int face, char suit);
@@ -46,8 +46,9 @@ void printDeck(card* deck_head, card* currObj);
 void shuffleCards(card* deck_head, card* currObj, int num_cards);
 void testUnicode(); //just a test for unicode characters. works on mac
 void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number of tests in this function.
-card* copyDeck(card* list);
-void dealCards(card* deck_head, player* player_1, player* player_2);
+void dealCards(card* deck_head, player* player_1, player* player_pc);
+void validateCardChoice(player* player_1, player* player_pc, int choice);
+void cardFoundOrNot(player* player_1, player* player_pc, int counter, card* deck_head);
 
 
 void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
@@ -55,7 +56,6 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->face = face;
     thisCard->next = nextCard;
 }
-
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
@@ -169,6 +169,7 @@ void dealCards(card* deck_head, player* player_1, player* player_pc) {
     }
 }
 
+
 void printDeck(card* deck_head, card* currObj) {
 
     //Print linked list.. deck
@@ -178,7 +179,6 @@ void printDeck(card* deck_head, card* currObj) {
         currObj = CardNode_GetNext(currObj);
     }
 }
-
 
 card* findCard(card* temp, int* face, char* suit)
 {
@@ -238,180 +238,541 @@ card* findCardFace(card* temp, int* face)
 
 }
 
-void checkDeckForBooks()
+void checkDeckForBooks() //huh?
 {
+
+
 
 }
 
-void playerAskForCard(player* player_1, player* player_pc)
+void validateCardChoice(player* player_1, player* player_pc, int choice)
 {
-    char choice_card;
-    int choice;
-    while (1)
+    card* temp = findCardFace(player_pc->head, choice);
+    if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
     {
-        printf("Which card (A, 2-9) do you want to ask for? ");
-        scanf(" %c", &choice_card);
-
-        if (choice_card == 'A') //iterate through the user's choice A, 2-9
-        {
-            choice = 1;
-            for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '2')
-        {
-            choice = 2;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '3')
-        {
-            choice = 3;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '4')
-        {
-            choice = 4;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '5')
-        {
-            choice = 5;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '6')
-        {
-            choice = 6;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '7')
-        {
-            choice = 7;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '8')
-        {
-            choice = 8;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else if (choice_card == '9')
-        {
-            choice = 9;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                card* temp = findCardFace(player_pc->head, choice);
-                if (temp != NULL)
-                {
-                    player_1->hand = (card*)malloc(sizeof(card));
-                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-                    CardNode_InsertAfter(player_1->prev, player_1->hand);
-                    deleteCard(player_pc->head, temp->face, temp->suit);
-                }
-            }
-        }
-        else
-        {
-            printf("Enter only A, 2-9 for the card\n");
-            continue; //print functions in next lines wont execute if 'continue' and reenter loop
-        }
-
-        printDeck(player_pc->head, player_pc->hand);
-        printf("\n");
-        printDeck(player_1->head, player_1->hand);
-        printf("\n");
+        player_1->hand = (card*)malloc(sizeof(card));
+        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+        CardNode_InsertAfter(player_1->prev, player_1->hand);
+        deleteCard(player_pc->head, temp->face, temp->suit);
     }
 }
 
-void compAskForCard()
+void askForCard(player* player_1, player* player_pc, int* whos_turn)
 {
+    char choice_card;
+    int choice;
+    
+    while (1)
+    {
+        int counter = 0;
+        if (*whos_turn == 1)
+        {
+            printf("Your turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
+            scanf(" %c", &choice_card);
 
+            if (choice_card == 'A') //iterate through the user's choice A, 2-9
+            {
+                choice = 1;
+                for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
+                {
+                    //validateCardChoice(&player_1, &player_pc, &choice)
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '2')
+            {
+                choice = 2;
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '3')
+            {
+                choice = 3;
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '4')
+            {
+                choice = 4;
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '5')
+            {
+                choice = 5;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '6')
+            {
+                choice = 6;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '7')
+            {
+                choice = 7;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '8')
+            {
+                choice = 8;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice_card == '9')
+            {
+                choice = 9;
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_1->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_1->prev, player_1->hand);
+                        deleteCard(player_pc->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else
+            {
+                printf("Enter only A, 2-9 for the card\n");
+                continue; //print functions in next lines wont execute if 'continue' and reenter loop
+            }
+
+
+            if (counter == 0) //go fish
+            {
+                *whos_turn = 2;
+                break;
+            }
+            else
+            {
+                printf("Go again!\n");
+                printDeck(player_pc->head, player_pc->hand);
+                printf("\n");
+                printDeck(player_1->head, player_1->hand);
+                printf("\n");
+            }
+        }
+        else //if whos_turn == 2, PC TURN
+        {
+            printf("PC's turn......\n");
+            srand((int)time(0));
+            choice = rand() % 9;
+
+            if (choice == 1) //iterate through the user's choice A, 2-9
+            {
+                for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 2)
+            {   
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 3)
+            {             
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 4)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 5)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 6)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 7)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 8)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else if (choice == 9)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    card* temp = findCardFace(player_pc->head, choice);
+                    if (temp != NULL)
+                    {
+                        player_pc->hand = (card*)malloc(sizeof(card));
+                        CardNode_Create(player_pc->hand, temp->suit, temp->face, NULL);
+                        CardNode_InsertAfter(player_pc->prev, player_pc->hand);
+                        deleteCard(player_1->head, temp->face, temp->suit);
+                        counter++;
+                    }
+                }
+            }
+            else
+            {
+                printf("Something went wrong....\n");
+                exit(1);
+            }
+
+            if (counter == 0)
+            {
+                *whos_turn = 1;
+                break;
+            }
+            else
+            {
+                printf("PC found a card! Going again.\n");
+                printDeck(player_pc->head, player_pc->hand);
+                printf("\n");
+                printDeck(player_1->head, player_1->hand);
+                printf("\n");
+            }
+        }
+    }
 }
+
+//int compAskForCard(player* player_1, player* player_pc, int whos_turn)
+//{
+//    char choice_card;
+//    int choice;
+//    int counter = 0;
+//
+//    // Computer picks a choice
+//
+//    while (1)
+//    {
+//
+//        if (choice_card == 'A') //iterate through the user's choice A, 2-9
+//        {
+//            choice = 1;
+//            for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '2')
+//        {
+//            choice = 2;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '3')
+//        {
+//            choice = 3;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '4')
+//        {
+//            choice = 4;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '5')
+//        {
+//            choice = 5;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '6')
+//        {
+//            choice = 6;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '7')
+//        {
+//            choice = 7;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                }
+//            }
+//        }
+//        else if (choice_card == '8')
+//        {
+//            choice = 8;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//
+//                }
+//            }
+//        }
+//        else if (choice_card == '9')
+//        {
+//            choice = 9;
+//
+//            for (int i = 0; i < 4; ++i)
+//            {
+//                card* temp = findCardFace(player_pc->head, choice);
+//                if (temp != NULL)
+//                {
+//                    player_1->hand = (card*)malloc(sizeof(card));
+//                    CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
+//                    CardNode_InsertAfter(player_1->prev, player_1->hand);
+//                    deleteCard(player_pc->head, temp->face, temp->suit);
+//                    counter++;
+//                }
+//            }
+//        }
+//        else
+//        {
+//            printf("Enter only A, 2-9 for the card\n");
+//            continue; //print functions in next lines wont execute if 'continue' and reenter loop
+//        }
+//
+//        printDeck(player_pc->head, player_pc->hand);
+//        printf("\n");
+//        printDeck(player_1->head, player_1->hand);
+//        printf("\n");
+//    }
+//
+//}
 
 
 int main(void) {
@@ -459,41 +820,59 @@ int main(void) {
         }
     }
 
-    card* original_deck_head = NULL;
-    original_deck_head = (card*)malloc(sizeof(card));
-    original_deck_head = copyDeck(deck_head); //IGNORE FOR NOW
 
+    printf("---------TESTING--------\n");
     printf("Original deck: \n"); //TESTING
     printDeck(deck_head, currObj);
     printf("\n");
     shuffleCards(deck_head, currObj, num_cards);
     printf("\nShuffled deck: \n");
     printDeck(deck_head, currObj);
-    printf("\n");
 
     dealCards(deck_head, &player_1, &player_pc);
 
-    printf("\nComputer hand:\n");           //remove for final game, debugging purposes
+    printf("\nComputer hand:\n");      //TESTING
     printDeck(player_pc.head, player_pc.hand);
     printf("\nPlayer hand:\n");
     printDeck(player_1.head, player_1.hand);
+    printf("\n----------------------\n");
 
     int book_total = 0; //initially 0 total points and 0 per player
     int book_player = 0;
     int book_computer = 0;
-    while (book_total != 9) //ask for card here. game 'begins'
+    int whos_turn = 1; // 1 = player_1 turn... 2 = player_pc turn
+   
+    //ask for card here. game 'begins'
+    while (book_total != 9) //game stops when player has 9 books (sets).
     {
         //USE ARRAY FOR TRACKING BOOKS, DR. KAY APPROVED AND SAID "YOU SHOULD USE ARRAY"
-
         //checkDeckForBooks implement to a function after
-
-        playerAskForCard(&player_1, &player_pc);
-
         //compAskForCard implement to a function after
+        
+        askForCard(&player_1, &player_pc, &whos_turn); //game starts with player asking pc 
+
+
+        //addCard() function
+
+        
+        printDeck(player_pc.head, player_pc.hand);
+        printf("\n");
+        printDeck(player_1.head, player_1.hand);
+        printf("\n");
+
+
+
+        
+        // prompt player for chcice
+        // check player choice
+        // do things depending on the choice
+
+
+
+
+
 
     }
-
-
 
 
     char enter_menu; //comment this part out when game is finished. always put at bottom.
@@ -506,7 +885,7 @@ int main(void) {
             break;
         }
         else if (enter_menu == 'y') {
-            testGame(deck_head, currObj,original_deck_head, num_cards); //function to test functionality of program.
+            testGame(deck_head, currObj, num_cards); //function to test functionality of program.
             break;
         }
         else {
@@ -518,7 +897,6 @@ int main(void) {
     free(currObj);
     free(player_pc.hand);
     free(player_pc.head);
-    free(original_deck_head);
     free(player_1.head);
     free(player_1.hand);
 
@@ -526,7 +904,7 @@ int main(void) {
 }
 
 
-void testGame(card* deck_head, card* currObj, card* original_deck_head, int num_cards) {
+void testGame(card* deck_head, card* currObj, int num_cards) {
 
     int user_inp;
     printf("\n----------------------------------------------------\n");
@@ -561,14 +939,7 @@ void testGame(card* deck_head, card* currObj, card* original_deck_head, int num_
                 printDeck(deck_head, currObj);
             }
         }
-        else if (user_shuffle_inp == 2) {
-            printf("\n");
-            printDeck(deck_head, currObj);
-            printf("\n");
-            printDeck(original_deck_head, currObj);
-            printf("Not available. Still building\n");
 
-        }
     }
     else if (user_inp == 2) {
         printf("\nPrinting symbols....\n");
@@ -586,25 +957,6 @@ void testGame(card* deck_head, card* currObj, card* original_deck_head, int num_
 
     }
 
-}
-
-card* copyDeck(card* list) { //FIX ME! NOT WORKING YET. Not totally needed.
-
-    // Part 1 - the null list
-    if (list == NULL) return NULL;
-
-    // Part 2 - the head element
-    card* newHead = (card*)malloc(sizeof(card));
-
-    // Part 3 - the rest of the list
-    card* p = newHead;
-    list = list->next;
-    while (list != NULL) {
-        p->next = (card*)malloc(sizeof(card));
-        p = p->next;
-        list = list->next;
-    }
-    p->next = NULL;  // terminate last element.
 }
 
 void testUnicode() { //just a test for unicode characters. works on mac.
