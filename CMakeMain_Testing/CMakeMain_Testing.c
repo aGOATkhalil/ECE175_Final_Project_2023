@@ -566,11 +566,11 @@ void askForCard(player* player_1, player* player_pc, int* whos_turn)
                     }
                 }
             }
-            else if (choice == 9 || choice == 10)
+            else if (choice == 9 || choice == 0)
             {
-                if (choice == 10)
+                if (choice == 0)
                 {
-                    choice = choice - 1;
+                    choice = 9;
                 }
 
                 for (int i = 0; i < 4; ++i)
@@ -589,10 +589,11 @@ void askForCard(player* player_1, player* player_pc, int* whos_turn)
             else
             {
                 printf("Something went wrong....\n");
+                printf("Choice: %d\n", choice);
                 exit(1);
             }
 
-            if (counter == 0)
+            if (counter == 0) //go fish
             {
                 printf("PC didnt find a card....\n");
                 *whos_turn = 1;
@@ -601,10 +602,10 @@ void askForCard(player* player_1, player* player_pc, int* whos_turn)
             else
             {
                 printf("PC found a card! Going again.\n");
-                printDeck(player_pc->head, player_pc->hand);
-                printf("\n");
-                printDeck(player_1->head, player_1->hand);
-                printf("\n");
+                //printDeck(player_pc->head, player_pc->hand);
+                //printf("\n");
+                //printDeck(player_1->head, player_1->hand);
+                //printf("\n");
             }
 
            
