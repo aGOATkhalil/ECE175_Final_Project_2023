@@ -32,7 +32,7 @@ typedef struct player_s {
     struct card_s* hand;
     struct card_s* head;
     struct card_s* prev;
-    struct card_s* next;
+    //struct card_s* next;
 
 }player;
 
@@ -70,7 +70,6 @@ void CardNode_PrintNodeData(card* thisCard) {
 
     if (thisCard->suit == 's') {
         printf("%d", thisCard->face);
-        printf("%c", something);
         printf("%c", something);
         printf("\n");
     }
@@ -244,7 +243,7 @@ void checkDeckForBooks()
 
 }
 
-void playerAskForCard(player* player_pc, player* player_1)
+void playerAskForCard(player* player_1, player* player_pc)
 {
     char choice_card;
     int choice;
@@ -261,7 +260,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                 {
-                    player_1->head= (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -277,7 +276,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -293,7 +292,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_pc->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -309,7 +308,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -325,7 +324,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -341,7 +340,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -357,7 +356,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -373,7 +372,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -389,7 +388,7 @@ void playerAskForCard(player* player_pc, player* player_1)
                 card* temp = findCardFace(player_pc->head, choice);
                 if (temp != NULL)
                 {
-                    player_1->head = (card*)malloc(sizeof(card));
+                    player_1->hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(player_1->prev, player_1->hand);
                     deleteCard(player_pc->head, temp->face, temp->suit);
@@ -472,39 +471,6 @@ int main(void) {
     printDeck(deck_head, currObj);
     printf("\n");
 
-    //deal cards here
-    //card* comp_hand = NULL; //make computer hand and linked list.
-    //card* comp_deck_head = (card*)malloc(sizeof(card));
-    //card* prev_comp_card = NULL;
-    //CardNode_Create(comp_deck_head, -1, -1, NULL);
-    //prev_comp_card = comp_deck_head;
-
-    //card* player_hand = NULL;
-    //card* player_deck_head = (card*)malloc(sizeof(card)); //make player hand and linked list.
-    //card* prev_player_card = NULL;
-    //CardNode_Create(player_deck_head, -1, -1, NULL);
-    //prev_player_card = player_deck_head;
-
-    //deck_head = deck_head->next;
-    //int toggle = 0; //manually toggle to hand card to each player 1 by 1.
-    //for (int i = 0; i < 6 * 2; i++)
-    //{
-    //    if (toggle == 0) {
-    //        comp_hand = (card*)malloc(sizeof(card));
-    //        CardNode_Create(comp_hand, deck_head->suit, deck_head->face, NULL);
-    //        CardNode_InsertAfter(prev_comp_card, comp_hand);
-    //        toggle = 1;
-    //    }
-    //    else {
-    //        player_hand = (card*)malloc(sizeof(card));
-    //        CardNode_Create(player_hand, deck_head->suit, deck_head->face, NULL);
-    //        CardNode_InsertAfter(prev_player_card, player_hand);
-    //        toggle = 0;
-    //    }
-    //    deleteCard(deck_head, deck_head->face, deck_head->suit);
-    //    deck_head = deck_head->next;
-    //}
-
     dealCards(deck_head, &player_1, &player_pc);
 
     printf("\nComputer hand:\n");           //remove for final game, debugging purposes
@@ -521,7 +487,7 @@ int main(void) {
 
         //checkDeckForBooks implement to a function after
 
-        playerAskForCard(&player_pc, &player_1);
+        playerAskForCard(&player_1, &player_pc);
 
         //compAskForCard implement to a function after
 
