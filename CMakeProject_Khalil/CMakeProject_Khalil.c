@@ -23,7 +23,7 @@
 typedef struct card_s {			//can add or change to this but not delete any preexisting
 
     char suit; //s - spade, h - heart, d - diamond, c - club
-    int face; //1 - ACE
+    int face; //1 = ACE, 2-9
     struct card_s* next; //card.next... this is a pointer to an address of type card.
 
 } card;
@@ -40,7 +40,6 @@ void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->face = face;
     thisCard->next = nextCard;
 }
-
 
 void CardNode_InsertAfter(card* thisCard, card* newCard) {
     card* tmpNext = NULL;
@@ -127,6 +126,17 @@ void printDeck(card* deck_head, card* currObj) {
     }
 }
 
+int numCardsInDeck(card* currObj, card* deck_head)
+{
+    int num_cards = 0;
+    currObj = deck_head->next;
+
+    while (currObj != NULL)
+    {
+        ++num_cards;
+    }
+    return num_cards;
+}
 
 card* findCard(card* temp, int* face, char* suit)
 {
@@ -186,9 +196,41 @@ card* findCardFace(card* temp, int* face)
 
 }
 
-void checkDeckForBooks()
+void checkDeckForBooks(card* deck_head, card* player_hand, card* prev_player_card, int* book_player, int* book_total, char player_books[])
 {
+    for (int i = 1; i <= 9; ++i)
+    {
+        int count = 0;
+        card* temp = findCardFace(deck_head, i);
 
+        if (temp != NULL)
+        {
+            ++count;
+        }
+        if (count == 4)
+        {
+            //syntax?
+            ++*book_total;
+            ++*book_player;
+
+            if (i == 1)
+            {
+                player_books[i - 1] = 'A';
+            }
+            else
+            {
+                player_books[i - 1] = i;
+            }
+
+            //Delete each card of the face value from the deck
+            //DOES NOT WORK YET 
+            //FIX ME
+            deleteCard(player_hand, temp->face, 'H');
+            deleteCard(player_hand, temp->face, 'D');
+            deleteCard(player_hand, temp->face, 'S');
+            deleteCard(player_hand, temp->face, 'C');
+        }
+    }
 }
 
 void playerAskForCard(card* comp_deck_head, card* comp_hand, card* prev_player_card, card* player_hand, card* player_deck_head)
@@ -208,6 +250,7 @@ void playerAskForCard(card* comp_deck_head, card* comp_hand, card* prev_player_c
                 card* temp = findCardFace(comp_deck_head, choice);
                 if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                 {
+                    //can possibly make this a function later
                     player_hand = (card*)malloc(sizeof(card));
                     CardNode_Create(player_hand, temp->suit, temp->face, NULL);
                     CardNode_InsertAfter(prev_player_card, player_hand);
@@ -370,6 +413,10 @@ int main(void) {
     char player_name[100]; //may change later. names may not always be just 100 char long.
     player player_1; //also could change if we want extra credit. 
     player player_2;
+    int i;
+    int j;
+    char player_books[10];
+    char comp_books[10];
 
     printf("Enter your name: ");
     scanf("%s", player_1.name);
@@ -384,7 +431,7 @@ int main(void) {
 
     //Generate deck of cards
     int num_cards = 0;
-    for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
+    for (i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
         for (int j = 0; j < 4; j++) //card suit
         {
@@ -414,44 +461,44 @@ int main(void) {
     original_deck_head = (card*)malloc(sizeof(card));
     original_deck_head = copyDeck(deck_head); //IGNORE FOR NOW
 
-    printf("Original deck: \n"); //TESTING
+    printf("Original deck: \n"); //TESTING PURPOSES
     printDeck(deck_head, currObj);
     printf("\n");
-    shuffleCards(deck_head, currObj, num_cards);
+    //shuffleCards(deck_head, currObj, num_cards);
     printf("\nShuffled deck: \n");
     printDeck(deck_head, currObj);
     printf("\n");
 
     //deal cards here
-    card* comp_hand = NULL; //make computer hand and linked list.
+    card* comp_hand = NULL; //make computer hand and linked list
     card* comp_deck_head = (card*)malloc(sizeof(card));
     card* prev_comp_card = NULL;
     CardNode_Create(comp_deck_head, -1, -1, NULL);
     prev_comp_card = comp_deck_head;
 
-    card* player_hand = NULL;
-    card* player_deck_head = (card*)malloc(sizeof(card)); //make player hand and linked list.
+    card* player_hand = NULL; //make player hand and linked list
+    card* player_deck_head = (card*)malloc(sizeof(card)); //make player hand and linked list
     card* prev_player_card = NULL;
     CardNode_Create(player_deck_head, -1, -1, NULL);
     prev_player_card = player_deck_head;
 
     deck_head = deck_head->next;
-    int toggle = 0; //manually toggle to hand card to each player 1 by 1.
-    for (int i = 0; i < 6 * 2; i++)
+    int toggle = 0; //manually toggle to hand card to each player 1 by 1 //// likely modify later
+    for (i = 0; i < 6 * 2; i++)
     {
-        if (toggle == 0) {
+        if (toggle == 0) { //deal to computer
             comp_hand = (card*)malloc(sizeof(card));
             CardNode_Create(comp_hand, deck_head->suit, deck_head->face, NULL);
             CardNode_InsertAfter(prev_comp_card, comp_hand);
             toggle = 1;
         }
-        else {
+        else { //deal to player
             player_hand = (card*)malloc(sizeof(card));
             CardNode_Create(player_hand, deck_head->suit, deck_head->face, NULL);
             CardNode_InsertAfter(prev_player_card, player_hand);
             toggle = 0;
         }
-        deleteCard(deck_head, deck_head->face, deck_head->suit);
+        deleteCard(deck_head, deck_head->face, deck_head->suit); //delete dealed card from main deck
         deck_head = deck_head->next;
     }
 
@@ -460,19 +507,20 @@ int main(void) {
     printf("\nPlayer hand:\n");
     printDeck(player_deck_head, player_hand);
 
-    int book_total = 0; //initially 0 total points and 0 per player
+    int book_total = 0; //initially 0 total points and 0 per player/comp
     int book_player = 0;
     int book_computer = 0;
-    while (book_total != 9) //ask for card here. game 'begins'
-    {
-        //USE ARRAY FOR TRACKING BOOKS, DR. KAY APPROVED AND SAID "YOU SHOULD USE ARRAY"
 
-        //checkDeckForBooks implement to a function after
-        
+    while (book_total != 9) //Game 'begins'
+    {
+        checkDeckForBooks(player_deck_head, player_hand, prev_player_card, &book_player, &book_total, player_books);
+        checkDeckForBooks(comp_deck_head, comp_hand, prev_comp_card, &book_computer, &book_total, comp_books);
 
         playerAskForCard(comp_deck_head, comp_hand, prev_player_card, player_hand, player_deck_head);
 
-        //compAskForCard implement to a function after
+        //compAskForCard implement to a function after, basically same as player
+        //probably better to make general function and pass parameters for it for each player
+        //will fix/implement later
         
     }
     
