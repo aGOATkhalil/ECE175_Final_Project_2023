@@ -675,7 +675,6 @@ int main(void) {
         }
     }
 
-
     printf("---------TESTING--------\n");
     printf("Original deck: \n"); //TESTING
     printDeck(deck_head, currObj);
@@ -721,10 +720,9 @@ int main(void) {
         deck_head = deck_head->next;
     }
    
-    printf("Deck after dealing cards: \n"); //doesnt even change dawg....
+    printf("Deck after dealing cards: \n"); 
     printDeck(deck_head, currObj);
     printf("\n");
-    //deck_head = deck_head->next;
 
     printf("\nComputer hand:\n");      //TESTING
     printDeck(player_pc.head, player_pc.hand);
