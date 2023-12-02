@@ -135,6 +135,7 @@ void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates 
 
 void dealCards(card* deck_head, player* player_1, player* player_pc) { //cards are not being deleted from the deck as we draw them...
 
+
     //deal cards here
     player_pc->hand = NULL; //make computer hand and linked list.
     player_pc->head = (card*)malloc(sizeof(card));
@@ -175,11 +176,19 @@ void dealCards(card* deck_head, player* player_1, player* player_pc) { //cards a
 void printDeck(card* deck_head, card* currObj) {
 
     //Print linked list.. deck
-    currObj = deck_head->next;
-    while (currObj != NULL) {
-        CardNode_PrintNodeData(currObj);
-        currObj = CardNode_GetNext(currObj);
+    if (deck_head == NULL)
+    {
+        printf("FLAG: printDeck(), deck_head is null.\n");
     }
+    else
+    {
+        currObj = deck_head->next;
+        while (currObj != NULL) {
+            CardNode_PrintNodeData(currObj);
+            currObj = CardNode_GetNext(currObj);
+        }
+    }
+
 }
 
 card* findCard(card* temp, int* face, char* suit)
@@ -263,9 +272,9 @@ void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX M
 void drawCard(player* player_info, card* deck_head)
 {
     //error at cardnode_create and cardnode_insertafter
+    deck_head = deck_head->next;
     if (deck_head != NULL)
     {
-        deck_head = deck_head->next;
         player_info->hand = (card*)malloc(sizeof(card));
         CardNode_Create(player_info->hand, deck_head->suit, deck_head->face, NULL);
         CardNode_InsertAfter(player_info->prev, player_info->hand);
@@ -690,7 +699,6 @@ int main(void) {
     CardNode_Create(player_1.head, -1, -1, NULL);
     player_1.prev = player_1.head;
 
-
     deck_head = deck_head->next;
     int toggle = 0; //manually toggle to hand card to each player 1 by 1.
     for (int i = 0; i < 6 * 2; i++)
@@ -712,8 +720,7 @@ int main(void) {
         deleteCard(deck_head, deck_head->face, deck_head->suit);
         deck_head = deck_head->next;
     }
-
-
+   
     printf("Deck after dealing cards: \n"); //doesnt even change dawg....
     printDeck(deck_head, currObj);
     printf("\n");
@@ -733,9 +740,14 @@ int main(void) {
 
     //ask for card here. game 'begins'
     while (book_total != 9) //game stops when player has 9 books (sets).
-    {        
-        counter = askForCard(&player_1, &player_pc, whos_turn); //game starts with player asking pc 
+    {  
+        if (deck_head == NULL)
+        {
+            printf("Deck is empty!\n");
+            return 0;
+        }
 
+        counter = askForCard(&player_1, &player_pc, whos_turn); //game starts with player asking pc 
         if (counter == 0) //go fish 
         {
             if (whos_turn == 1) //for player_1
@@ -751,7 +763,6 @@ int main(void) {
             }
             deck_head = deck_head->next; //move deck head to avoid duplicates
             printf("Go Fish!\n\n");
-
         }
         else //card was found
         {
@@ -777,9 +788,6 @@ int main(void) {
         printDeck(player_1.head, player_1.hand);
         printf("\n");
 
-        // prompt player for chcice
-        // check player choice
-        // do things depending on the choice
     }
 
 
