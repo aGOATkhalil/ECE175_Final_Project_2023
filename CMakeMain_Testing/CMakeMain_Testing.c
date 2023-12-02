@@ -37,7 +37,7 @@ typedef struct player_s {
 }player;
 
 void compAskForCard(player* player_1, player* player_pc);
-void askForCard(player* player_1, player* player_pc, card* deck_head, int *whos_turn);
+int askForCard(player* player_1, player* player_pc,int whos_turn);
 void checkDeckForBooks();
 card* findCardFace(card* temp, int* face);
 void deleteCard(card* temp, int face, char suit);
@@ -49,8 +49,8 @@ void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number
 void dealCards(card* deck_head, player* player_1, player* player_pc);
 void validateCardChoice(player* player_1, player* player_pc, int choice); //WORKING ON IT
 void cardFoundOrNot(player* player_1, player* player_pc, int counter, card* deck_head);
-void drawCard(card* player_info, card* deck_head, int* whos_turn); //WORKING ON IT
-
+void drawCard(card* player_info, card* deck_head); //WORKING ON IT
+void countDuplicateNodes(card* player_info);
 
 void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
     thisCard->suit = suit;
@@ -259,7 +259,7 @@ void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX M
     }
 }
 
-void drawCard(player* player_info, card* deck_head, int* whos_turn)
+void drawCard(player* player_info, card* deck_head)
 {
     //error at cardnode_create and cardnode_insertafter
     deck_head = deck_head->next;
@@ -277,7 +277,7 @@ void drawCard(player* player_info, card* deck_head, int* whos_turn)
     }
 }
 
-void askForCard(player* player_1, player* player_pc, card* deck_head, int* whos_turn) //organize function and split logic into diff functions for readability
+int askForCard(player* player_1, player* player_pc, int whos_turn) //organize function and split logic into diff functions for readability
 {
     char choice_card;
     int choice;
@@ -285,7 +285,7 @@ void askForCard(player* player_1, player* player_pc, card* deck_head, int* whos_
     while (1)
     {
         int counter = 0;
-        if (*whos_turn == 1) //player turn
+        if (whos_turn == 1) //player turn
         {
             printf("Your turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
             scanf(" %c", &choice_card);
@@ -445,22 +445,21 @@ void askForCard(player* player_1, player* player_pc, card* deck_head, int* whos_
                 continue; //print functions in next lines wont execute if 'continue' and reenter loop
             }
 
-
-            if (counter == 0) //go fish
-            {
-                printf("Go Fish!\n");
-                drawCard(player_1, &deck_head, &whos_turn); //works when you pass in player_1 and not its address.... why?
-                *whos_turn = 2;
-                break;
-            }
-            else //card was found
-            {
-                printf("Go again!\n");
-                printDeck(player_pc->head, player_pc->hand);
-                printf("\n");
-                printDeck(player_1->head, player_1->hand);
-                printf("\n");
-            }
+            //if (counter == 0) //go fish
+            //{
+            //    printf("Go Fish!\n");
+            //    drawCard(player_1, &deck_head, &whos_turn); //works when you pass in player_1 and not its address.... why?
+            //    *whos_turn = 2;
+            //    break;
+            //}
+            //else //card was found
+            //{
+            //    printf("Go again!\n");
+            //    printDeck(player_pc->head, player_pc->hand);
+            //    printf("\n");
+            //    printDeck(player_1->head, player_1->hand);
+            //    printf("\n");
+            //}
         }
         else //if whos_turn == 2, PC TURN
         {
@@ -615,20 +614,9 @@ void askForCard(player* player_1, player* player_pc, card* deck_head, int* whos_
                 exit(1);
             }
 
-            if (counter == 0) //go fish
-            {
-                printf("PC didnt find a card....\n");
-                drawCard(player_pc, &deck_head, &whos_turn); //works when you pass in player_1 and not its address.... why?
-                *whos_turn = 1;
-                break;
-            }
-            else //PC found a card
-            {
-                printf("PC found a card! Going again.\n");
-            }
-
-           
         }
+
+        return counter;
     }
 }
 
@@ -687,6 +675,7 @@ int main(void) {
     printDeck(deck_head, currObj);
 
     dealCards(deck_head, &player_1, &player_pc);
+    deck_head = deck_head->next;
 
     printf("\nComputer hand:\n");      //TESTING
     printDeck(player_pc.head, player_pc.hand);
@@ -698,35 +687,58 @@ int main(void) {
     int book_player = 0;
     int book_computer = 0;
     int whos_turn = 1; // 1 = player_1 turn... 2 = player_pc turn
-   
+    int counter = 1;
+
     //ask for card here. game 'begins'
     while (book_total != 9) //game stops when player has 9 books (sets).
-    {
-        //USE ARRAY FOR TRACKING BOOKS, DR. KAY APPROVED AND SAID "YOU SHOULD USE ARRAY"
-        //checkDeckForBooks implement to a function after
-        //compAskForCard implement to a function after
-        
-        askForCard(&player_1, &player_pc, deck_head, &whos_turn); //game starts with player asking pc 
+    {        
+        counter = askForCard(&player_1, &player_pc, whos_turn); //game starts with player asking pc 
 
+        if (counter == 0) //go fish 
+        {
+            if (whos_turn == 1) //for player_1
+            {
+                drawCard(&player_1, deck_head, whos_turn); //works when you pass in player_1 and not its address.... why?
+                deck_head = deck_head->next;
+                whos_turn = 2;
+            }
+            else
+            {
+                printf("PC didnt find a card....\n");
+                drawCard(&player_pc, deck_head, whos_turn);
+                deck_head = deck_head->next;
+                whos_turn = 1;
+            }
+            printf("Go Fish!\n\n");
+
+        }
+        else //card was found
+        {
+            switch (whos_turn)
+            {
+                case 1:
+                    printf("You found a card! Go again!\n");
+                    break;
+                case 2:
+                    printf("PC found a card! Going again.\n");
+                    break;
+                default:
+                    printf("Something went wrong...\n");
+                    exit(1);
+            }
+        }
+
+        printf("Deck:\n");
         printDeck(deck_head, currObj);
-        printf("\n");
+        printf("\nPC hand:\n");
         printDeck(player_pc.head, player_pc.hand);
-        printf("\n");
+        printf("\nPlayer hand:\n");
         printDeck(player_1.head, player_1.hand);
         printf("\n");
 
-
-
-        
         // prompt player for chcice
         // check player choice
         // do things depending on the choice
-
-
-
-
-
-
     }
 
 
@@ -757,6 +769,7 @@ int main(void) {
 
     return 0;
 }
+
 
 
 void testGame(card* deck_head, card* currObj, int num_cards) {
@@ -813,6 +826,30 @@ void testGame(card* deck_head, card* currObj, int num_cards) {
     }
 
 }
+
+//int countDuplicateNodes(card* player_info) {
+//    int count = 0;
+//
+//    // Traverse the linked list
+//    card* current = player_info;
+//    while (current != NULL) {
+//        // Compare the current node with the rest of the list
+//        card* runner = current->next;
+//        while (runner != NULL) {
+//            // Assuming the comparison is based on the 'value' field
+//            if (current->player_info-> == runner->value) {
+//                count++;
+//                // If you want to remove duplicates, you can uncomment the next line
+//                // (Note: This modification might change the original linked list)
+//                // current->next = runner->next;
+//            }
+//            runner = runner->next;
+//        }
+//        current = current->next;
+//    }
+//
+//    return count;
+//}
 
 void testUnicode() { //just a test for unicode characters. works on mac.
 
