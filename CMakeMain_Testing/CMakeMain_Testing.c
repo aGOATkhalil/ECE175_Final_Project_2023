@@ -133,7 +133,7 @@ void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates 
     }
 }
 
-void dealCards(card* deck_head, player* player_1, player* player_pc) {
+void dealCards(card* deck_head, player* player_1, player* player_pc) { //cards are not being deleted from the deck as we draw them...
 
     //deal cards here
     player_pc->hand = NULL; //make computer hand and linked list.
@@ -157,14 +157,14 @@ void dealCards(card* deck_head, player* player_1, player* player_pc) {
             player_pc->hand = (card*)malloc(sizeof(card));
             CardNode_Create(player_pc->hand, deck_head->suit, deck_head->face, NULL);
             CardNode_InsertAfter(player_pc->prev, player_pc->hand);
-            //player_pc->prev = player_pc->hand;
+            player_pc->prev = player_pc->hand;
             toggle = 1;
         }
         else {
             player_1->hand = (card*)malloc(sizeof(card));
             CardNode_Create(player_1->hand, deck_head->suit, deck_head->face, NULL);
             CardNode_InsertAfter(player_1->prev, player_1->hand);
-            //player_1->prev = player_1->hand;
+            player_1->prev = player_1->hand;
             toggle = 0;
         }
         deleteCard(deck_head, deck_head->face, deck_head->suit);
@@ -199,13 +199,14 @@ card* findCard(card* temp, int* face, char* suit)
 
 void deleteCard(card* temp, int face, char suit) {
 
-    card* prev = temp;
+    card* prev;
     card* target = findCard(temp, face, suit);
 
     if (target == NULL) {
         printf(""); //test, shouldn't need in final
     }
     else {
+        card* prev = temp;
         if (prev->next == target) {
             temp->next = target->next;
         }
@@ -262,9 +263,9 @@ void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX M
 void drawCard(player* player_info, card* deck_head)
 {
     //error at cardnode_create and cardnode_insertafter
-    deck_head = deck_head->next;
     if (deck_head != NULL)
     {
+        deck_head = deck_head->next;
         player_info->hand = (card*)malloc(sizeof(card));
         CardNode_Create(player_info->hand, deck_head->suit, deck_head->face, NULL);
         CardNode_InsertAfter(player_info->prev, player_info->hand);
@@ -674,8 +675,49 @@ int main(void) {
     printf("\nShuffled deck: \n");
     printDeck(deck_head, currObj);
 
-    dealCards(deck_head, &player_1, &player_pc);
+    //dealCards(deck_head, &player_1, &player_pc);
+    //deal cards here
+    //NOTE. THIS WORKS IN MAIN BUT NOT IN A FUNCTION. POINTER ERRORS AND WHAT NOT
+    player_pc.hand = NULL; //make computer hand and linked list.
+    player_pc.head = (card*)malloc(sizeof(card));
+    player_pc.prev = NULL;
+    CardNode_Create(player_pc.head, -1, -1, NULL);
+    player_pc.prev = player_pc.head;
+
+    player_1.hand = NULL; //make computer hand and linked list.
+    player_1.head = (card*)malloc(sizeof(card));
+    player_1.prev = NULL;
+    CardNode_Create(player_1.head, -1, -1, NULL);
+    player_1.prev = player_1.head;
+
+
     deck_head = deck_head->next;
+    int toggle = 0; //manually toggle to hand card to each player 1 by 1.
+    for (int i = 0; i < 6 * 2; i++)
+    {
+        if (toggle == 0) {
+            player_pc.hand = (card*)malloc(sizeof(card));
+            CardNode_Create(player_pc.hand, deck_head->suit, deck_head->face, NULL);
+            CardNode_InsertAfter(player_pc.prev, player_pc.hand);
+            player_pc.prev = player_pc.hand;
+            toggle = 1;
+        }
+        else {
+            player_1.hand = (card*)malloc(sizeof(card));
+            CardNode_Create(player_1.hand, deck_head->suit, deck_head->face, NULL);
+            CardNode_InsertAfter(player_1.prev, player_1.hand);
+            player_1.prev = player_1.hand;
+            toggle = 0;
+        }
+        deleteCard(deck_head, deck_head->face, deck_head->suit);
+        deck_head = deck_head->next;
+    }
+
+
+    printf("Deck after dealing cards: \n"); //doesnt even change dawg....
+    printDeck(deck_head, currObj);
+    printf("\n");
+    //deck_head = deck_head->next;
 
     printf("\nComputer hand:\n");      //TESTING
     printDeck(player_pc.head, player_pc.hand);
@@ -699,16 +741,15 @@ int main(void) {
             if (whos_turn == 1) //for player_1
             {
                 drawCard(&player_1, deck_head, whos_turn); //works when you pass in player_1 and not its address.... why?
-                deck_head = deck_head->next;
                 whos_turn = 2;
             }
             else
             {
                 printf("PC didnt find a card....\n");
                 drawCard(&player_pc, deck_head, whos_turn);
-                deck_head = deck_head->next;
                 whos_turn = 1;
             }
+            deck_head = deck_head->next; //move deck head to avoid duplicates
             printf("Go Fish!\n\n");
 
         }
