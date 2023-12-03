@@ -218,16 +218,25 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME! EX
 {
     //this function does indeed add cards to the player's deck, but it does not print properly......
     //it also doesnt know when the deck is full. so, after it fills the deck, on the next iteration it will think it needs to fill it agian.
-    *deck_head = (*deck_head)->next;
-    for (int i = 0; i < num_cards; i++)
-    {
-        player_info->hand = (card*)malloc(sizeof(card));
-        CardNode_Create(player_info->hand, (*deck_head)->suit, (*deck_head)->face, NULL);
-        CardNode_InsertAfter(player_info->prev, player_info->hand);
-        player_info->prev = player_info->hand;
-        deleteCard((*deck_head), (*deck_head)->face, (*deck_head)->suit);
-        *deck_head = (*deck_head)->next;
-    }
+
+     *deck_head = (*deck_head)->next;
+     player_info->prev = player_info->head;
+     for (int i = 0; i < num_cards; i++)
+     {
+         player_info->hand = (card*)malloc(sizeof(card));
+         CardNode_Create(player_info->hand, (*deck_head)->suit, (*deck_head)->face, NULL);
+         CardNode_InsertAfter(player_info->prev, player_info->hand);
+         player_info->prev = player_info->hand;
+         deleteCard((*deck_head), (*deck_head)->face, (*deck_head)->suit);
+         *deck_head = (*deck_head)->next;
+    
+         if ((*deck_head)->next == NULL) //if deck has no more cards (ex. 2 cards left in deck) then give 2 and exit function.
+         {
+             printf("\nDeck is empty");
+             break;
+         }
+     }
+ 
 }
 
 void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX ME! Function doesnt work strangely.
@@ -245,18 +254,22 @@ void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX M
 void drawCard(player* player_info, card* deck_head)
 {
     //error at cardnode_create and cardnode_insertafter
-    deck_head = deck_head->next;
-    if (deck_head != NULL)
+
+    if (deck_head->next == NULL)
     {
-        player_info->hand = (card*)malloc(sizeof(card));
-        CardNode_Create(player_info->hand, deck_head->suit, deck_head->face, NULL);
-        CardNode_InsertAfter(player_info->prev, player_info->hand);
-        deleteCard(deck_head, deck_head->face, deck_head->suit);
-        deck_head = deck_head->next;
+        printf("Deck is empty\n");
     }
     else
     {
-        printf("Deck is empty\n");
+        deck_head = deck_head->next;
+        if (deck_head != NULL)
+        {
+            player_info->hand = (card*)malloc(sizeof(card));
+            CardNode_Create(player_info->hand, deck_head->suit, deck_head->face, NULL);
+            CardNode_InsertAfter(player_info->prev, player_info->hand);
+            deleteCard(deck_head, deck_head->face, deck_head->suit);
+            deck_head = deck_head->next;
+        }
     }
 }
 
@@ -771,7 +784,6 @@ int main(void) {
                 printf("Adding cards to PC's deck.....\n");
                 addCards(&player_pc, &deck_head, 6);
             }
-
         }
 
         printf("\n---------------------------------------\n");
