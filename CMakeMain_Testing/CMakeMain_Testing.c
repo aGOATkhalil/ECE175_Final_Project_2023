@@ -281,7 +281,7 @@ void drawCard(player* player_info, card* deck_head)
     }
     else
     {
-        printf("Deck is empty");
+        printf("Deck is empty\n");
     }
 }
 
@@ -711,7 +711,7 @@ int main(void) {
 
 
     printf("Cards are distributed!\n");
-    printf("This is your hand: \n");
+    printf("This is your hand: ");
     printDeck(player_1.head, player_1.hand);
     printf("\n");
 
@@ -757,9 +757,6 @@ int main(void) {
             if (whos_turn == 1) //for player_1
             {
                 drawCard(&player_1, deck_head, whos_turn); //works when you pass in player_1 and not its address.... why?
-                printf("\nYour hand: ");
-                printDeck(player_1.head, player_1.hand);
-                printf("\n\n");
                 whos_turn = 2;
             }
             else
@@ -769,7 +766,7 @@ int main(void) {
                 whos_turn = 1;
             }
             deck_head = deck_head->next; //move deck head to avoid duplicates
-            printf("Go Fish!\n\n");
+            printf("Go Fish!\n");
 
         }
         else //card was found
@@ -778,9 +775,6 @@ int main(void) {
             {
                 case 1:
                     printf("You found a card! Go again!\n");
-                    printf("\nYour hand: ");
-                    printDeck(player_1.head, player_1.hand);
-                    printf("\n\n");
                     break;
                 case 2:
                     printf("PC found a card! Going again.\n");
@@ -791,6 +785,10 @@ int main(void) {
             }
 
         }
+
+        printf("\nYour hand: ");
+        printDeck(player_1.head, player_1.hand);
+        printf("\n\n");
 
         //printf("Deck:\n");
         //printDeck(deck_head, currObj);
