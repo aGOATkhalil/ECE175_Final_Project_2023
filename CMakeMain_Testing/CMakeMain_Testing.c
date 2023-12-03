@@ -192,7 +192,7 @@ void deleteCard(card* temp, int face, char suit) {
     }
 }
 
-card* findCardFace(card* temp, int** face)
+card* findCardFace(card* temp, int* face)
 {
     card* curr = CardNode_GetNext(temp);
     while (curr != NULL)
@@ -277,10 +277,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
 {
     char choice_card;
     //int choice;
-    
+    int counter = 0;
+    int choice_local;
+    *choice = &choice_local;
     while (1)
     {
-        int counter = 0;
         if (whos_turn == 1) //player turn
         {
             printf("Your turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
@@ -288,11 +289,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
 
             if (choice_card == 'A') //iterate through the user's choice A, 2-9
             {
-                *choice = 1;
+                choice_local = 1;
                 for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
                 {
                     //validateCardChoice(&player_1, &player_pc, &choice)
-                    card* temp = findCardFace(player_pc->head, choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -305,10 +306,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '2')
             {
-                *choice = 2;
+                choice_local = 2;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -321,10 +322,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '3')
             {
-                *choice = 3;
+                choice_local = 3;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -337,10 +338,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '4')
             {
-                *choice = 4;
+                choice_local = 4;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -353,11 +354,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '5')
             {
-                *choice = 5;
+                choice_local = 5;
 
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -370,11 +371,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '6')
             {
-                *choice = 6;
-
+                choice_local = 6;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -387,11 +387,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '7')
             {
-                *choice = 7;
-
+                choice_local = 7;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -404,11 +403,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '8')
             {
-                *choice = 8;
-
+                choice_local = 8;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -421,10 +419,10 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             }
             else if (choice_card == '9')
             {
-                *choice = 9;
+                choice_local = 9;
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_pc->head, &choice);
+                    card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)
                     {
                         player_1->hand = (card*)malloc(sizeof(card));
@@ -445,13 +443,13 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
         {
             printf("PC's turn......\n");
             srand((int)time(0));
-            *choice = rand() % 9;
+            choice_local = rand() % 9;
 
-            if (*choice == 1) //iterate through the user's choice A, 2-9
+            if (choice_local == 1) //iterate through the user's choice A, 2-9
             {
                 for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -462,11 +460,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 2)
+            else if (choice_local == 2)
             {   
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -477,11 +475,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 3)
+            else if (choice_local == 3)
             {             
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -492,11 +490,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 4)
+            else if (choice_local == 4)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -507,11 +505,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 5)
+            else if (choice_local == 5)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -522,11 +520,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 6)
+            else if (choice_local == 6)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -537,11 +535,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 7)
+            else if (choice_local == 7)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -552,11 +550,11 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 8)
+            else if (choice_local == 8)
             {
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -567,16 +565,16 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                     }
                 }
             }
-            else if (*choice == 9 || *choice == 0)
+            else if (choice_local == 9 || choice_local == 0)
             {
-                if (*choice == 0)
+                if (choice_local == 0)
                 {
-                    *choice = 9;
+                    choice_local = 9;
                 }
 
                 for (int i = 0; i < 4; ++i)
                 {
-                    card* temp = findCardFace(player_1->head, &choice);
+                    card* temp = findCardFace(player_1->head, choice_local);
                     if (temp != NULL)
                     {
                         player_pc->hand = (card*)malloc(sizeof(card));
@@ -590,12 +588,19 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             else //For debugging. Shouldnt ever reach condition in final game.
             {
                 printf("Something went wrong....\n");
-                printf("Choice: %d\n", choice);
+                printf("Choice: %d\n", *choice);
                 exit(1);
             }
-        }
 
-        return counter;
+            char validate_input; //ask player for choice
+            do
+            {
+                printf("Do you have card(s) with %d (y/n)?", choice_local);
+                scanf(" %c", &validate_input);
+
+            } while (validate_input != 'y' && validate_input != 'n');
+        }
+        return counter; //the player should be telling the truth. if not, it won't matter. 
     }
 }
 
@@ -716,8 +721,6 @@ int main(void) {
     int book_player = 0;
     int book_computer = 0;
     int whos_turn = 1; // 1 = player_1 turn... 2 = player_pc turn
-    int counter = 1;
-
     //ask for card here. game 'begins'
     while (book_total != 9) //game stops when player has 9 books (sets).
     {  
@@ -727,6 +730,7 @@ int main(void) {
             return 0;
         }
         int choice; //pass choice as pointer to return both counter and choice.
+        int counter;
         counter = askForCard(&player_1, &player_pc, &choice, whos_turn); //game starts with player asking pc 
 
         //if (whos_turn == 1) {
@@ -735,6 +739,7 @@ int main(void) {
         //    printDeck(player_1.head, player_1.hand);
         //    printf("\n\n");
         //}
+
 
         if (counter == 0) //go fish 
         {
@@ -746,7 +751,6 @@ int main(void) {
                 if (choice == player_1.hand->face) {
                     //if drawCard has the suit that player asked, then its the player's turn again
                     printf("The card drawn is the same as what was asked! Go again.\n");
-                    whos_turn = 1;
                 }
                 else {
                     whos_turn = 2;
@@ -760,7 +764,6 @@ int main(void) {
                 if (choice == player_pc.hand->face) {
                     //if drawCard has the suit that player asked, then its the player's turn again
                     printf("The card drawn is the same as what was asked! PC is going again.\n");
-                    whos_turn = 2;
                 }
                 else {
                     whos_turn = 1;
@@ -788,8 +791,9 @@ int main(void) {
         printDeck(player_1.head, player_1.hand);
         printf("\n\n");
 
-        if (player_1.head->next == NULL || player_pc.head->next== NULL)
+        if (player_1.head->next == NULL || player_pc.head->next== NULL) 
         {
+            //if player's hand is empty, add cards from the deck.
             if (player_1.head->next== NULL) {
                 printf("Adding cards to your deck.....\n");
                 addCards(&player_1, &deck_head, 6);
