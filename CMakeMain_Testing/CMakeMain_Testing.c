@@ -804,13 +804,14 @@ int main(void) {
             }
         }
 
-        printf("\n---------------------------------------\n");
-        printf("\nDeck: ");
-        printDeck(deck_head, currObj);
-        printf("\nPC hand: ");
-        printDeck(player_pc.head, player_pc.hand);
-        printf("\nPlayer hand: ");
-        printDeck(player_1.head, player_1.hand);
+        //printf("\n---------------------------------------\n");
+        //printf("\nDeck: ");
+        //printDeck(deck_head, currObj);
+        //printf("\nPC hand: ");
+        //printDeck(player_pc.head, player_pc.hand);
+        //printf("\nPlayer hand: ");
+        //printDeck(player_1.head, player_1.hand);
+        //printf("\n---------------------------------------\n");
         printf("\n---------------------------------------\n");
     }
 
