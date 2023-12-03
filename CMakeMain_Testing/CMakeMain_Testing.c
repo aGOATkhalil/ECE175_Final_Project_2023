@@ -240,7 +240,7 @@ void drawCard(player* player_info, card* deck_head)
     }
     else
     {
-        printf("Deck is empty");
+        printf("Deck is empty\n");
     }
 }
 
@@ -411,22 +411,6 @@ int askForCard(player* player_1, player* player_pc, int whos_turn) //organize fu
                 printf("Enter only A, 2-9 for the card\n");
                 continue; //print functions in next lines wont execute if 'continue' and reenter loop
             }
-
-            //if (counter == 0) //go fish
-            //{
-            //    printf("Go Fish!\n");
-            //    drawCard(player_1, &deck_head, &whos_turn); //works when you pass in player_1 and not its address.... why?
-            //    *whos_turn = 2;
-            //    break;
-            //}
-            //else //card was found
-            //{
-            //    printf("Go again!\n");
-            //    printDeck(player_pc->head, player_pc->hand);
-            //    printf("\n");
-            //    printDeck(player_1->head, player_1->hand);
-            //    printf("\n");
-            //}
         }
         else //if whos_turn == 2, PC TURN
         {
@@ -580,7 +564,6 @@ int askForCard(player* player_1, player* player_pc, int whos_turn) //organize fu
                 printf("Choice: %d\n", choice);
                 exit(1);
             }
-
         }
 
         return counter;
@@ -675,11 +658,9 @@ int main(void) {
         deck_head = deck_head->next;
     }
    
-    
-    //printf("\nDeck after dealing cards: \n"); //TESTING
+    //printf("Deck after dealing cards: \n"); 
     //printDeck(deck_head, currObj);
     //printf("\n");
-
     //printf("\nComputer hand:\n");      //TESTING
     //printDeck(player_pc.head, player_pc.hand);
     //printf("\nPlayer hand:\n");
@@ -690,7 +671,7 @@ int main(void) {
     printf("This is your hand: ");
     printDeck(player_1.head, player_1.hand);
     printf("\n");
-
+    
     char validate_continue;
     do {
         printf("Continue? (y/n)\nYou will start the game if you press 'y': ");
@@ -701,7 +682,6 @@ int main(void) {
         }
 
     } while (validate_continue != 'y');
-
 
     int book_total = 0; //initially 0 total points and 0 per player
     int book_player = 0;
@@ -714,7 +694,7 @@ int main(void) {
     {  
         if (deck_head == NULL)
         {
-            printf("Deck is empty!\n");
+            printf("\n-----Deck is empty!------\n\n");
             return 0;
         }
 
@@ -732,19 +712,20 @@ int main(void) {
             if (whos_turn == 1) //for player_1
             {
                 drawCard(&player_1, deck_head, whos_turn); //works when you pass in player_1 and not its address.... why?
-                deleteCard(deck_head, deck_head->face, deck_head->suit);
-                whos_turn = 2;
+                //deleteCard(deck_head, deck_head->face, deck_head->suit);
                 //printDeck(player_1.head, player_1.hand);
+                whos_turn = 2;
+                
             }
             else
             {
                 printf("PC didnt find a card....\n");
                 drawCard(&player_pc, deck_head, whos_turn);
-                deleteCard(deck_head, deck_head->face, deck_head->suit);
+                //deleteCard(deck_head, deck_head->face, deck_head->suit);
                 whos_turn = 1;
             }
             deck_head = deck_head->next; //move deck head to avoid duplicates
-            printf("Go Fish!\n\n");
+            printf("Go Fish!\n");
         }
         else //card was found
         {
@@ -762,20 +743,18 @@ int main(void) {
             }
         }
 
-        printf("\nPlayer hand:\n");
+        printf("\nYour hand: ");
         printDeck(player_1.head, player_1.hand);
-        printf("\n");
-        //TESTING
-        //printf("\nDeck:\n"); 
+        printf("\n\n");
+
+        //printf("Deck:\n");
         //printDeck(deck_head, currObj);
         //printf("\nPC hand:\n");
         //printDeck(player_pc.head, player_pc.hand);
         //printf("\nPlayer hand:\n");
         //printDeck(player_1.head, player_1.hand);
         //printf("\n");
-
     }
-
 
     char enter_menu; //comment this part out when game is finished. always put at bottom.
     while (1)
@@ -870,3 +849,4 @@ void testUnicode() { //just a test for unicode characters. works on mac.
     printf("%c", HEART);
     printf("\n");
 }
+
