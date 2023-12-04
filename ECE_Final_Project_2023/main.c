@@ -2,9 +2,9 @@
 //
 //
 // See final_project_notes.txt in the repo for the pseudocode.
-//Test functions are below main(). Useful functions are above main().
 
-#include "CMakeMain_Testing.h"
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
