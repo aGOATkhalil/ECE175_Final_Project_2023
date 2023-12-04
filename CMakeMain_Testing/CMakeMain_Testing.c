@@ -254,7 +254,7 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
     //this function does indeed add cards to the player's deck
 
     //*deck_head = (*deck_head)->next;
-    if ((*deck_head)->next == NULL )
+    if ((*deck_head)->next == NULL || (*deck_head) == NULL)
     {
         printf("FLAG 1ST: Deck is empty.\n");
     }
@@ -287,7 +287,7 @@ void drawCard(player* player_info, card* deck_head) //FIX ME
 {
     //error at cardnode_create and cardnode_insertafter
 
-    if (deck_head->next == NULL)
+    if (deck_head->next == NULL || deck_head == NULL)
     {
         printf("Deck is empty\n");
     }
@@ -847,6 +847,7 @@ int main(void) {
                 if (deck_head->next == NULL || deck_head == NULL)
                 {
                     printf("No more cards left in deck!\n");
+                    break; //break because if no cards in deck and player deck is empty then the game ends.
                     //break;
                 }
                 else
@@ -860,7 +861,7 @@ int main(void) {
                 if (deck_head->next == NULL || deck_head == NULL)
                 {
                     printf("No more cards left in deck!\n");
-                    //break;
+                    break;
                 }
                 else
                 {
@@ -869,6 +870,7 @@ int main(void) {
 
                 
             }
+
             //deck_head = deck_head->next; //testing to see if error is here....
         }
 
