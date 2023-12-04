@@ -276,7 +276,6 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
             }
 
             *deck_head = (*deck_head)->next;
-
         }
     }
 
@@ -780,13 +779,6 @@ int main(void) {
         int choice; //pass choice as pointer to return both counter and choice.
         int counter;
         counter = askForCard(&player_1, &player_pc, &choice, whos_turn); //game starts with player asking pc 
-
-        //if (whos_turn == 1) {
-        //    //system("cls");
-        //    printf("Your hand: ");
-        //    printDeck(player_1.head, player_1.hand);
-        //    printf("\n\n");
-        //}
 
         if (counter == 0) //go fish 
         {
