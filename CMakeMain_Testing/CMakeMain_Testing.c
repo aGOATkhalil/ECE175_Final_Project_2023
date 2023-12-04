@@ -213,8 +213,7 @@ void checkDeckForBooks() //huh?
 
 void addCards(player* player_info, card** deck_head, int num_cards) 
 {
-    //this function does indeed add cards to the player's deck, but it does not print properly......
-    //it also doesnt know when the deck is full. so, after it fills the deck, on the next iteration it will think it needs to fill it agian.
+    //this function does indeed add cards to the player's deck
 
      *deck_head = (*deck_head)->next;
      player_info->prev = player_info->head;
