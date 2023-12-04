@@ -712,6 +712,9 @@ int main(void) {
         }
     }
 
+    //initially shuffle the deck
+    shuffleCards(deck_head, currObj, num_cards);
+
     //deal cards here
     player_pc.hand = NULL; //make computer hand and linked list.
     player_pc.head = (card*)malloc(sizeof(card));
