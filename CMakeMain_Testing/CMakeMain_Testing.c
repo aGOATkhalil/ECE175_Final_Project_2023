@@ -43,9 +43,6 @@ void deleteCard(card* temp, int face, char suit);
 card* findCard(card* temp, int* face, char* suit);
 void printDeck(card* deck_head, card* currObj);
 void shuffleCards(card* deck_head, card* currObj, int num_cards);
-void testUnicode(); //just a test for unicode characters.
-void testGame(card* deck_head, card* currObj, int num_cards); //dev menu. number of tests in this function.
-void validateCardChoice(player* player_1, player* player_pc, int choice); //WORKING ON IT
 void cardFoundOrNot(player* player_1, player* player_pc, int counter, card* deck_head);
 void drawCard(card* player_info, card* deck_head); //WORKING ON IT
 
@@ -239,18 +236,6 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME! EX
  
 }
 
-void validateCardChoice(player* player_1, player* player_pc, int choice) //FIX ME! Function doesnt work strangely.
-{
-    card* temp = findCardFace(player_pc->head, choice);
-    if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
-    {
-        player_1->hand = (card*)malloc(sizeof(card));
-        CardNode_Create(player_1->hand, temp->suit, temp->face, NULL);
-        CardNode_InsertAfter(player_1->prev, player_1->hand);
-        deleteCard(player_pc->head, temp->face, temp->suit);
-    }
-}
-
 void drawCard(player* player_info, card* deck_head)
 {
     //error at cardnode_create and cardnode_insertafter
@@ -286,13 +271,12 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
         {
             printf("Your turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
             scanf(" %c", &choice_card);
-
+            player_1->prev = player_1->head;
             if (choice_card == 'A') //iterate through the user's choice A, 2-9
             {
                 choice_local = 1;
                 for (int i = 0; i < 4; ++i) //if choice, ask for up to 4 cards (H,S,D,C) 
                 {
-                    //validateCardChoice(&player_1, &player_pc, &choice)
                     card* temp = findCardFace(player_pc->head, choice_local);
                     if (temp != NULL)    //if face value found, copy to player deck and delete from comp deck
                     {
@@ -740,7 +724,6 @@ int main(void) {
         //    printf("\n\n");
         //}
 
-
         if (counter == 0) //go fish 
         {
             printf("Go Fish!\n");
@@ -815,24 +798,6 @@ int main(void) {
         printf("\n---------------------------------------\n");
     }
 
-    char enter_menu; //comment this part out when game is finished. always put at bottom.
-    while (1)
-    {
-        printf("Enter game dev menu? (y/n)");
-        scanf("%c", &enter_menu);
-
-        if (enter_menu == 'n') {
-            break;
-        }
-        else if (enter_menu == 'y') {
-            testGame(deck_head, currObj, num_cards); //function to test functionality of program.
-            break;
-        }
-        else {
-            continue;
-        }
-    }
-
     free(deck_head);
     free(currObj);
     free(player_pc.hand);
@@ -842,70 +807,3 @@ int main(void) {
 
     return 0;
 }
-
-
-
-void testGame(card* deck_head, card* currObj, int num_cards) {
-
-    int user_inp;
-    printf("\n----------------------------------------------------\n");
-    printf("Development Menu\n");
-    printf("1. Check shuffle functionality\n");
-    printf("2, Check symbol print out\n");
-    printf("3. Check handing cards functinoality\n");
-    printf("4. Show deck\n");
-    printf("\n----------------------------------------------------\n");
-    scanf("%d", &user_inp);
-
-    if (user_inp == 1) {
-        int num_shuffles;
-        int user_shuffle_inp;
-        printf("Choose one.\n");
-        printf("1. Shuffle deck n times\n");
-        printf("2. Check to see if all cards are in deck\n");
-        scanf("%d", &user_shuffle_inp);
-
-        if (user_shuffle_inp == 1) {
-
-            printf("1. How many times would you like to shuffle the deck: ");
-            scanf("%d", &num_shuffles);
-
-            printf("\nOriginal deck: \n");
-            printDeck(deck_head, currObj); // check to see if deck formed correctly.
-
-            printf("\nBeginning test\n");
-            for (int i = 0; i < num_shuffles; i++) {
-                shuffleCards(deck_head, currObj, num_cards);
-                printf("\nShuffle #%d\n", i + 1);
-                printDeck(deck_head, currObj);
-            }
-        }
-
-    }
-    else if (user_inp == 2) {
-        printf("\nPrinting symbols....\n");
-        testUnicode(); //the output of these symbols work on windows and mac!
-    }
-    else if (user_inp == 3) {
-        printf("Shuffled deck\n");
-        printDeck(deck_head, currObj);
-        printf("\nComputer deck: \n");
-        //printDeck(comp_deck_head, comp_hand); //FIX ME
-    }
-    else if (user_inp == 4) {
-        printf("\nDeck:\n");
-        printDeck(deck_head, currObj);
-
-    }
-
-}
-
-void testUnicode() { //just a test for unicode characters. works on mac.
-
-    printf("%c", SPADE);
-    printf("%c", CLUB);
-    printf("%c", DIAMOND);
-    printf("%c", HEART);
-    printf("\n");
-}
-
