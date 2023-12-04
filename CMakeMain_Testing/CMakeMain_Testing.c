@@ -4,7 +4,6 @@
 // See final_project_notes.txt in the repo for the pseudocode.
 //Test functions are below main(). Useful functions are above main().
 
-
 #include "CMakeMain_Testing.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +16,6 @@
 #define CLUB 'C'
 #define SPADE 'S'
 
-
 typedef struct card_s {			//can add or change to this but not delete any preexisting
 
     char suit; //s - spade, h - heart, d - diamond, c - club
@@ -26,7 +24,7 @@ typedef struct card_s {			//can add or change to this but not delete any preexis
 
 } card;
 
-typedef struct player_s {
+typedef struct player_s { //player data struct
 
     char name[100];
     struct card_s* hand;
@@ -35,37 +33,28 @@ typedef struct player_s {
 
 }player;
 
-void compAskForCard(player* player_1, player* player_pc);
-int askForCard(player* player_1, player* player_pc,int whos_turn);
-void checkDeckForBooks(player* player_info, int* book_player, int* book_total, char player_books[]);
-card* findCardFace(card* temp, int* face);
-void deleteCard(card* temp, int face, char suit);
-card* findCard(card* temp, int* face, char* suit);
-void printDeck(card* deck_head, card* currObj);
-void shuffleCards(card* deck_head, card* currObj, int num_cards);
-void cardFoundOrNot(player* player_1, player* player_pc, int counter, card* deck_head);
-void drawCard(card* player_info, card* deck_head); //WORKING ON IT
-
-void CardNode_Create(card* thisCard, char suit, int face, card* nextCard) {
+void CardNode_Create(card * thisCard, char suit, int face, card * nextCard) {
+    //creates a card
     thisCard->suit = suit;
     thisCard->face = face;
     thisCard->next = nextCard;
 }
 
-void CardNode_InsertAfter(card* thisCard, card* newCard) {
+void CardNode_InsertAfter(card * thisCard, card * newCard) {
+    //inserts a card in a list
     card* tmpNext = NULL;
     tmpNext = thisCard->next; // Remember next
     thisCard->next = newCard; // this -- new -- ?
     newCard->next = tmpNext;  // this -- new -- next
 }
 
-void CardNode_PrintNodeData(card* thisCard) {
+void CardNode_PrintNodeData(card * thisCard) {
 
-    char something = SPADE;
+    //prints the stuff of the card
 
     if (thisCard->suit == 's') {
         printf("%d", thisCard->face);
-        printf("%c", something);
+        printf("%c", SPADE);
         printf(" ");
     }
     else if (thisCard->suit == 'h') {
@@ -88,11 +77,11 @@ void CardNode_PrintNodeData(card* thisCard) {
     }
 }
 
-card* CardNode_GetNext(card* thisCard) {
-    return thisCard->next;
+card* CardNode_GetNext(card * thisCard) {
+    return thisCard->next; //selft explanatory..
 }
 
-void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates shuffle algorithm
+void shuffleCards(card * deck_head, card * currObj, int num_cards) //Fisher-Yates shuffle algorithm
 {
     srand((int)time(0));
     currObj = deck_head;
@@ -127,7 +116,7 @@ void shuffleCards(card* deck_head, card* currObj, int num_cards) //Fisher-Yates 
     }
 }
 
-void printDeck(card* deck_head, card* currObj) {
+void printDeck(card * deck_head, card * currObj) {
 
     //Print linked list.. deck
     if (deck_head == NULL)
@@ -145,9 +134,11 @@ void printDeck(card* deck_head, card* currObj) {
 
 }
 
-card* findCard(card* temp, int* face, char* suit)
+card* findCard(card * temp, int* face, char* suit)
 {
+    //finds a card that matches face and suit values
     card* curr = CardNode_GetNext(temp);
+
     while (curr != NULL)
     {
         if (curr->face == face && curr->suit == suit)
@@ -160,8 +151,9 @@ card* findCard(card* temp, int* face, char* suit)
 
 }
 
-void deleteCard(card* temp, int face, char suit) {
-
+void deleteCard(card * temp, int face, char suit) {
+    //deletes a card from the deck and replaces and points to the next of the deleted one
+    //function from class approved to use in our codes
     card* prev;
     card* target = findCard(temp, face, suit);
 
@@ -189,9 +181,11 @@ void deleteCard(card* temp, int face, char suit) {
     }
 }
 
-card* findCardFace(card* temp, int* face)
+card* findCardFace(card * temp, int* face)
 {
+    //find a card in deck of same face value
     card* curr = CardNode_GetNext(temp);
+
     while (curr != NULL)
     {
         if (curr->face == face)
@@ -204,17 +198,18 @@ card* findCardFace(card* temp, int* face)
 
 }
 
-void checkDeckForBooks(player* player_info, int* book_player, int* book_total, char player_books[]) //I think this is correct parameters to pass
+void checkDeckForBooks(player * player_info, int* book_player, int* book_total, char player_books[])
 {
+    //Checks the deck of whichever player was passed in and increments totals as necessary
     card* temp;
 
-    for (int i = 1; i <= 9; ++i)
+    for (int i = 1; i <= 9; ++i) //iterate for A-9
     {
         int count = 0;
 
-        temp = player_info->head;
+        temp = player_info->head; //temp variable at head
 
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; ++j) //iterate to find all 4
         {
             temp = findCardFace(temp, i);
 
@@ -226,7 +221,7 @@ void checkDeckForBooks(player* player_info, int* book_player, int* book_total, c
             {
                 break;
             }
-            if (count == 4)     //if there's 4 face values found, delete them from hand and increment book
+            if (count == 4)     //if there's 4 face values found, delete them from hand and increment books
             {
                 (*book_total)++;
                 (*book_player)++;
@@ -240,25 +235,30 @@ void checkDeckForBooks(player* player_info, int* book_player, int* book_total, c
                     player_books[i - 1] = (i + 48);
                 }
 
+                //delete each suit of the set of values
                 deleteCard(player_info->head, i, 'h');
                 deleteCard(player_info->head, i, 'd');
                 deleteCard(player_info->head, i, 's');
                 deleteCard(player_info->head, i, 'c');
+
+                printf("Book of %d found in the hand of %s\n", i, player_info->name);
             }
         }
     }
 }
 
-void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
+void addCards(player * player_info, card * *deck_head, int num_cards) //FIX ME
 {
     //this function does indeed add cards to the player's deck
+
+    //*deck_head = (*deck_head)->next;
     if ((*deck_head)->next == NULL || (*deck_head) == NULL)
     {
-        printf("Deck is empty.\n");
+        printf("FLAG 1ST: Deck is empty.\n");
     }
     else
     {
-        player_info->prev = player_info->head;
+        player_info->prev = player_info->head; //prev points to head
         for (int i = 0; i < num_cards; i++)
         {
             player_info->hand = (card*)malloc(sizeof(card));
@@ -273,12 +273,14 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
                 break;
             }
 
-            (*deck_head) = (*deck_head)->next;
+            *deck_head = (*deck_head)->next;
         }
     }
+
+
 }
 
-void drawCard(player* player_info, card* deck_head) //FIX ME
+void drawCard(player * player_info, card * deck_head) //draws card from the main deck into players'
 {
     //error at cardnode_create and cardnode_insertafter
 
@@ -300,7 +302,7 @@ void drawCard(player* player_info, card* deck_head) //FIX ME
     }
 }
 
-int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) //organize function and split logic into diff functions for readability
+int askForCard(player * player_1, player * player_pc, int* choice, int whos_turn) //organize function and split logic into diff functions for readability
 {
     char choice_card;
     //int choice;
@@ -311,7 +313,7 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
     {
         if (whos_turn == 1) //player turn
         {
-            printf("Your turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
+            printf("\nYour turn %s. Which card (A, 2-9) do you want to ask for? ", player_1->name);
             scanf(" %c", &choice_card);
             player_1->prev = player_1->head;
             if (choice_card == 'A') //iterate through the user's choice A, 2-9
@@ -467,7 +469,7 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
         }
         else //if whos_turn == 2, PC TURN
         {
-            printf("PC's turn......\n");
+            printf("\nPC's turn......\n");
             srand((int)time(0));
             choice_local = rand() % 9;
 
@@ -487,7 +489,7 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                 }
             }
             else if (choice_local == 2)
-            {   
+            {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(player_1->head, choice_local);
@@ -502,7 +504,7 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
                 }
             }
             else if (choice_local == 3)
-            {             
+            {
                 for (int i = 0; i < 4; ++i)
                 {
                     card* temp = findCardFace(player_1->head, choice_local);
@@ -621,7 +623,7 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
             char validate_input; //ask player for choice
             do
             {
-                printf("Do you have card(s) with %d (y/n)?", choice_local);
+                printf("Do you have card(s) with %d (y/n)? ", choice_local);
                 scanf(" %c", &validate_input);
 
             } while (validate_input != 'y' && validate_input != 'n');
@@ -630,15 +632,29 @@ int askForCard(player* player_1, player* player_pc, int *choice, int whos_turn) 
     }
 }
 
-void deallocateMemory(card* head) //free allocated memory by passing in the heads of the lists
+int numCards(card* deck_head) //get the number of cards in a deck/hand
+{
+    int count = 0;
+    card* curr = deck_head->next;
+
+    while (curr != NULL)
+    {
+        ++count;
+        curr = curr->next;
+    }
+
+    return count;
+}
+
+void deallocateMemory(card * head) //free allocated memory by passing in the heads of the lists
 {
     card* curr = head;
     card* next;
 
-    while (curr != NULL) 
+    while (curr != NULL)
     {
         next = curr->next;
-        free(curr);
+        free(curr); //frees the stuff
         curr = next;
     }
 }
@@ -648,13 +664,18 @@ int main(void) {
     char player_name[100]; //may change later. names may not always be just 100 char long.
     player player_1; //also could change if we want extra credit. 
     player player_pc;
+    strcpy(player_pc.name, "PC");
     int i;
+    int j;
+    int num_cards = 0;
     char player_books[9] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
     char comp_books[9] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 
     printf("Enter your name: ");
     scanf("%s", player_1.name);
-    printf("\n%s lets play go fish!\n", player_1.name);
+    printf("\n><(((('> ><(((('> ><(((('> ><(((('> ><(((('>\n");
+    printf("\n\t%s, lets play go fish!\n", player_1.name);
+    printf("\n><(((('> ><(((('> ><(((('> ><(((('> ><(((('>\n");
 
     card* currObj = NULL;
     card* deck_head = NULL;
@@ -665,10 +686,9 @@ int main(void) {
     lastObj = deck_head;
 
     //Generate deck of cards
-    int num_cards = 0;
-    for (int i = 1; i < 10; i++) //number of faces... 1 = ACE
+    for (i = 1; i < 10; i++) //number of faces... 1 = ACE
     {
-        for (int j = 0; j < 4; j++) //card suit
+        for (j = 0; j < 4; j++) //card suit
         {
             char temp;
             if (j == 0) {
@@ -692,14 +712,6 @@ int main(void) {
         }
     }
 
-    //printf("---------TESTING--------\n");
-    printf("Original deck: \n"); //TESTING
-    printDeck(deck_head, currObj);
-    printf("\n");
-    shuffleCards(deck_head, currObj, num_cards);
-    printf("\nShuffled deck: \n");
-    printDeck(deck_head, currObj);
-
     //deal cards here
     player_pc.hand = NULL; //make computer hand and linked list.
     player_pc.head = (card*)malloc(sizeof(card));
@@ -714,7 +726,7 @@ int main(void) {
     player_1.prev = player_1.head;
 
     int toggle = 0; //manually toggle to hand card to each player 1 by 1.
-    for (int i = 0; i < 6 * 2; i++)
+    for (i = 0; i < 6 * 2; i++)
     {
         if (toggle == 0) {
             player_pc.hand = (card*)malloc(sizeof(card));
@@ -734,28 +746,19 @@ int main(void) {
         deck_head = deck_head->next;
         deleteCard(deck_head, deck_head->face, deck_head->suit);
     }
-   
-    printf("\nDeck after dealing cards: \n"); 
-    printDeck(deck_head, currObj);
-    printf("\n");
-    printf("\nComputer hand:\n");      //TESTING
-    printDeck(player_pc.head, player_pc.hand);
-    printf("\nPlayer hand:\n");
-    printDeck(player_1.head, player_1.hand);
-    printf("\n----------------------\n");
 
-    printf("Cards are distributed!\n");
+    printf("\nCards are distributed!\n");
     printf("This is your hand: ");
     printDeck(player_1.head, player_1.hand);
     printf("\n");
-    
+
     char validate_continue;
     do {
-        printf("Continue? (y/n)\nYou will start the game if you press 'y': ");
+        printf("\nContinue? (y/n)\nYou will start the game if you press 'y': ");
         scanf(" %c", &validate_continue);
 
         if (validate_continue != 'y') {
-            printf("\n~~~~~~~~~~~~~~~~Cry more.~~~~~~~~~~~~~~~~~\n");
+            printf("\n~~~~~~~~~~~~~~~~invalid choice~~~~~~~~~~~~~~~~~\n");
         }
 
     } while (validate_continue != 'y');
@@ -764,14 +767,38 @@ int main(void) {
     int book_player = 0;
     int book_computer = 0;
     int whos_turn = 1; // 1 = player_1 turn... 2 = player_pc turn
+
     //ask for card here. game 'begins'
-    while (book_total != 9) //game stops when player has 9 books (sets).
-    {  
+    while (book_total < 9) //game stops when player has 9 books (sets).
+    {
+        //inital check for books in case someone got dealt a book in hand
+        checkDeckForBooks(&player_1, &book_player, &book_total, player_books);
+        checkDeckForBooks(&player_pc, &book_computer, &book_total, comp_books);
+
+        printf("\n%s's current books: ", player_1.name); 
+        //iterate through arrays containing books for each player
+        for (i = 0; i < 9; ++i)
+        {
+            printf("%c ", player_books[i]);
+        }
+        printf("\n");
+
+        printf("PC's current books: ");
+        for (i = 0; i < 9; ++i)
+        {
+            printf("%c ", comp_books[i]);
+        }
+        printf("\n");
+
         if (deck_head == NULL)
         {
-            printf("\n-----Deck is empty!------\n\n");
-            //return 0;
+            printf("\n-------Deck is empty!-------\n\n");
         }
+
+        printf("\nYour hand: ");
+        printDeck(player_1.head, player_1.hand);
+        printf("\n\n");
+
         int choice; //pass choice as pointer to return both counter and choice.
         int counter;
         counter = askForCard(&player_1, &player_pc, &choice, whos_turn); //game starts with player asking pc 
@@ -789,7 +816,7 @@ int main(void) {
                 }
                 else {
                     whos_turn = 2;
-                }  
+                }
             }
             else
             {
@@ -810,15 +837,15 @@ int main(void) {
         {
             switch (whos_turn)
             {
-                case 1:
-                    printf("You found a card! Go again!\n");
-                    break;
-                case 2:
-                    printf("PC found a card! Going again.\n");
-                    break;
-                default:
-                    printf("Something went wrong...\n");
-                    exit(1);
+            case 1:
+                printf("You found a card! Go again!\n");
+                break;
+            case 2:
+                printf("PC found a card! Going again.\n");
+                break;
+            default:
+                printf("Something went wrong...\n");
+                exit(1);
             }
         }
 
@@ -826,17 +853,16 @@ int main(void) {
         printDeck(player_1.head, player_1.hand);
         printf("\n\n");
 
-        if (player_1.head->next == NULL || player_pc.head->next== NULL) 
+        if (player_1.head->next == NULL || player_pc.head->next == NULL)
         {
             //if player's hand is empty, add cards from the deck.
-            if (player_1.head->next== NULL) {
+            if (player_1.head->next == NULL) {
                 printf("Adding cards to your deck.....\n");
-                
+
                 if (deck_head->next == NULL || deck_head == NULL)
                 {
                     printf("No more cards left in deck!\n");
                     break; //break because if no cards in deck and player deck is empty then the game ends.
-                    //break;
                 }
                 else
                 {
@@ -855,73 +881,34 @@ int main(void) {
                 {
                     addCards(&player_pc, &deck_head, 6);
                 }
-
-                
             }
-
-            //deck_head = deck_head->next; //testing to see if error is here....
         }
 
-
-        checkDeckForBooks(&player_1, &book_player, &book_total, player_books);
-        checkDeckForBooks(&player_pc, &book_computer, &book_total, comp_books);
-
-        printf("\nTotal books: %d\n", book_total);
-        printf("\nPlayer books: %d", book_player);
-
-        printf("\nYour current books: [");
-        for (i = 0; i < 9; ++i)
-        {
-            printf("%c ", player_books[i]);
-        }
-        printf("]\n");
-
-        printf("Comp books: %d\n", book_computer);
-        printf("Comp current books: [");
-        for (i = 0; i < 9; ++i)
-        {
-            printf("%c ", comp_books[i]);
-        }
-        printf("]\n");
-
-
-        printf("\n---------------------------------------\n");
-        printf("\nDeck: ");
-        printDeck(deck_head, currObj);
-        printf("\nPC hand: ");
-        printDeck(player_pc.head, player_pc.hand);
-        printf("\nPlayer hand: ");
-        printDeck(player_1.head, player_1.hand);
-        printf("\n---------------------------------------\n");
-        printf("\n---------------------------------------\n");
+        //shuffle deck after complete turn has been done by each player
+        num_cards = numCards(deck_head);
+        shuffleCards(deck_head, currObj, num_cards);
     }
 
-
+    //final check books for game when total is 9
     checkDeckForBooks(&player_1, &book_player, &book_total, player_books);
     checkDeckForBooks(&player_pc, &book_computer, &book_total, comp_books);
 
     printf("\nTotal books: %d\n", book_total);
-    printf("\nPlayer books: %d", book_player);
 
-    printf("\nYour current books: [");
+    printf("\nYour books: ");
     for (i = 0; i < 9; ++i)
     {
         printf("%c ", player_books[i]);
     }
-    printf("]\n");
 
-    printf("Comp books: %d\n", book_computer);
-    printf("Comp current books: [");
+    printf("PC's books: ");
     for (i = 0; i < 9; ++i)
     {
         printf("%c ", comp_books[i]);
     }
-    printf("]\n");
+    printf("\n");
 
-
-    printf("\n---------------------------------------\n");
-    printf("\nTotal Books = %d\n", book_total);
-
+    //determine who winner is and display it
     if (book_player > book_computer)
     {
         printf("The winner is %s with %d books!!!\n\n", player_1.name, book_player);
@@ -931,12 +918,10 @@ int main(void) {
         printf("PC is the winner with %d books!!!\n\n", book_computer);
     }
 
+    //free memory used in the decks
     deallocateMemory(deck_head);
     deallocateMemory(player_1.head);
     deallocateMemory(player_pc.head);
-    //free(player_1.hand);
-    //free(player_pc.hand);
-    //free(currObj);
 
     return 0;
 }
