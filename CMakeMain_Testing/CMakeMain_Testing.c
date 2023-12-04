@@ -637,6 +637,11 @@ int numCards(card* deck_head) //get the number of cards in a deck/hand
     int count = 0;
     card* curr = deck_head->next;
 
+    if (curr->next == NULL)
+    {
+        return 0;
+    }
+
     while (curr != NULL)
     {
         ++count;
