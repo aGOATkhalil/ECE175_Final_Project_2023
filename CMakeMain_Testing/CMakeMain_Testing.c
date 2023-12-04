@@ -37,7 +37,7 @@ typedef struct player_s {
 
 void compAskForCard(player* player_1, player* player_pc);
 int askForCard(player* player_1, player* player_pc,int whos_turn);
-void checkDeckForBooks();
+void checkDeckForBooks(player* player_info, int* book_player, int* book_total, char player_books[]);
 card* findCardFace(card* temp, int* face);
 void deleteCard(card* temp, int face, char suit);
 card* findCard(card* temp, int* face, char* suit);
@@ -254,26 +254,32 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
     //this function does indeed add cards to the player's deck
 
     //*deck_head = (*deck_head)->next;
-    if ((*deck_head)->next == NULL)
+    if ((*deck_head)->next == NULL )
     {
-        return 0;
+        printf("FLAG 1ST: Deck is empty.\n");
     }
-    player_info->prev = player_info->head;
-    for (int i = 0; i < num_cards; i++)
+    else
     {
-        player_info->hand = (card*)malloc(sizeof(card));
-        CardNode_Create(player_info->hand, (*deck_head)->suit, (*deck_head)->face, NULL);
-        CardNode_InsertAfter(player_info->prev, player_info->hand);
-        player_info->prev = player_info->hand;
-        deleteCard((*deck_head), (*deck_head)->face, (*deck_head)->suit);
-        *deck_head = (*deck_head)->next;
-    
-        if ((*deck_head)->next == NULL) //if deck has no more cards (ex. 2 cards left in deck) then give 2 and exit function.
+        player_info->prev = player_info->head;
+        for (int i = 0; i < num_cards; i++)
         {
-            printf("\nDeck is empty");
-            break;
+            player_info->hand = (card*)malloc(sizeof(card));
+            CardNode_Create(player_info->hand, (*deck_head)->suit, (*deck_head)->face, NULL);
+            CardNode_InsertAfter(player_info->prev, player_info->hand);
+            player_info->prev = player_info->hand;
+            deleteCard((*deck_head), (*deck_head)->face, (*deck_head)->suit);
+
+            if ((*deck_head)->next == NULL) //if deck has no more cards (ex. 2 cards left in deck) then give 2 and exit function.
+            {
+                printf("\nDeck is empty");
+                break;
+            }
+
+            *deck_head = (*deck_head)->next;
+
         }
     }
+
  
 }
 
@@ -769,7 +775,7 @@ int main(void) {
         if (deck_head == NULL)
         {
             printf("\n-----Deck is empty!------\n\n");
-            return 0;
+            //return 0;
         }
         int choice; //pass choice as pointer to return both counter and choice.
         int counter;
@@ -788,7 +794,7 @@ int main(void) {
             if (whos_turn == 1) //for player_1
             {
                 drawCard(&player_1, deck_head, whos_turn); //works when you pass in player_1 and not its address.... why?
-                deleteCard(deck_head, deck_head->face, deck_head->suit);
+                deleteCard(deck_head, deck_head->face, deck_head->suit); //commented out and all 9 books show but something wierd happens....
                 if (choice == player_1.hand->face) {
                     //if drawCard has the suit that player asked, then its the player's turn again
                     printf("The card drawn is the same as what was asked! Go again.\n");
@@ -838,10 +844,10 @@ int main(void) {
             if (player_1.head->next== NULL) {
                 printf("Adding cards to your deck.....\n");
                 
-                if (deck_head->next == NULL)
+                if (deck_head->next == NULL || deck_head == NULL)
                 {
                     printf("No more cards left in deck!\n");
-                    break;
+                    //break;
                 }
                 else
                 {
@@ -851,13 +857,19 @@ int main(void) {
             else {
                 printf("Adding cards to PC's deck.....\n");
 
-                if (deck_head->next == NULL)
+                if (deck_head->next == NULL || deck_head == NULL)
                 {
-                    break;
+                    printf("No more cards left in deck!\n");
+                    //break;
+                }
+                else
+                {
+                    addCards(&player_pc, &deck_head, 6);
                 }
 
-                addCards(&player_pc, &deck_head, 6);
+                
             }
+            //deck_head = deck_head->next; //testing to see if error is here....
         }
 
 
@@ -932,6 +944,9 @@ int main(void) {
     deallocateMemory(deck_head);
     deallocateMemory(player_1.head);
     deallocateMemory(player_pc.head);
+    //free(player_1.hand);
+    //free(player_pc.hand);
+    //free(currObj);
 
     return 0;
 }
