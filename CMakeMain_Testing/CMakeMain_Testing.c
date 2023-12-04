@@ -252,11 +252,9 @@ void checkDeckForBooks(player* player_info, int* book_player, int* book_total, c
 void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
 {
     //this function does indeed add cards to the player's deck
-
-    //*deck_head = (*deck_head)->next;
     if ((*deck_head)->next == NULL || (*deck_head) == NULL)
     {
-        printf("FLAG 1ST: Deck is empty.\n");
+        printf("Deck is empty.\n");
     }
     else
     {
@@ -275,11 +273,9 @@ void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME
                 break;
             }
 
-            *deck_head = (*deck_head)->next;
+            (*deck_head) = (*deck_head)->next;
         }
     }
-
- 
 }
 
 void drawCard(player* player_info, card* deck_head) //FIX ME
