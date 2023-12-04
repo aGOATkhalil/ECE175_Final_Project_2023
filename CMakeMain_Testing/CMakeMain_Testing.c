@@ -211,7 +211,7 @@ void checkDeckForBooks() //huh?
 
 }
 
-void addCards(player* player_info, card** deck_head, int num_cards) //FIX ME! EXCEPTION THROWN AFTER PERSON'S HAND IS EMPTY
+void addCards(player* player_info, card** deck_head, int num_cards) 
 {
     //this function does indeed add cards to the player's deck, but it does not print properly......
     //it also doesnt know when the deck is full. so, after it fills the deck, on the next iteration it will think it needs to fill it agian.
@@ -787,14 +787,14 @@ int main(void) {
             }
         }
 
-        //printf("\n---------------------------------------\n");
-        //printf("\nDeck: ");
-        //printDeck(deck_head, currObj);
-        //printf("\nPC hand: ");
-        //printDeck(player_pc.head, player_pc.hand);
-        //printf("\nPlayer hand: ");
-        //printDeck(player_1.head, player_1.hand);
-        //printf("\n---------------------------------------\n");
+        printf("\n---------------------------------------\n");
+        printf("\nDeck: ");
+        printDeck(deck_head, currObj);
+        printf("\nPC hand: ");
+        printDeck(player_pc.head, player_pc.hand);
+        printf("\nPlayer hand: ");
+        printDeck(player_1.head, player_1.hand);
+        printf("\n---------------------------------------\n");
         printf("\n---------------------------------------\n");
     }
 
